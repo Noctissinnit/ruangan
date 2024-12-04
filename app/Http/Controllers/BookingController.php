@@ -89,6 +89,7 @@ class BookingController extends Controller
     // Menyimpan booking baru
     public function store(Request $request)
     {
+        info('Hello World!');
         $request->validate([
             'nis' => 'required',
             'password' => 'required|numeric',
@@ -105,7 +106,7 @@ class BookingController extends Controller
         // $user = User::find(session('google_bookings_user_id'));
         $user = User::where('nis', $request->nis)->first();
         $success = $user !== null && Hash::check($request->password, $user->pin);
-        if(!$success){
+        if (!$success) {
             return back()->with('error', 'Failed to validate user');
         }
 
@@ -166,9 +167,10 @@ class BookingController extends Controller
             }
         }
 
-        return redirect()
-            ->route("bookings.create", $request->room_id)
-            ->with("success", "Booking berhasil ditambahkan.");
+        return back();
+        // return redirect()
+        //     ->route("bookings.create", $request->room_id)
+        //     ->with("success", "Booking berhasil ditambahkan.");
     }
 
     public function destroy(Request $request)
@@ -192,7 +194,7 @@ class BookingController extends Controller
     public function indexAdmin(Request $request, Room $room)
     {
         $bookings = $room->bookings();
-        if($request->has('date')){
+        if ($request->has('date')) {
             $bookings = $bookings->where('date', $request->date);
         } else {
             $bookings = $bookings->where('date', Carbon::today());
@@ -292,10 +294,13 @@ class BookingController extends Controller
     public function export(Request $request, Room $room)
     {
         $export = new BookingsExport($room);
-        if($request->date){
+        if ($request->date) {
             $export->date = $request->date;
         }
-        return Excel::download($export, 'AtmiBookingRooms.'.($request->type === 'pdf' ? 'pdf' : 'xlsx'),
-            $request->type === 'pdf' ? \Maatwebsite\Excel\Excel::DOMPDF : \Maatwebsite\Excel\Excel::XLSX);
+        return Excel::download(
+            $export,
+            'AtmiBookingRooms.' . ($request->type === 'pdf' ? 'pdf' : 'xlsx'),
+            $request->type === 'pdf' ? \Maatwebsite\Excel\Excel::DOMPDF : \Maatwebsite\Excel\Excel::XLSX
+        );
     }
 }

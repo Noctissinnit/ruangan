@@ -186,6 +186,8 @@ function generateCalendar() {
     calendar.render();
 }
 
+
+
 // Function to generate a random color
 function getRandomColor() {
     const colors = [

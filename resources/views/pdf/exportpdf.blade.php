@@ -2,42 +2,94 @@
 <html>
 <head>
     <title>Bookings PDF</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        tr:hover {
+            background-color: #ddd;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 5px;
+            color: white;
+        }
+        .bg-success {
+            background-color: #28a745;
+        }
+        .bg-warning {
+            background-color: #ffc107;
+        }
+        .btn {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
 </head>
 <body>
     <h1>Bookings</h1>
-    <table border="1" cellpadding="5" cellspacing="0">
-    <tbody>
-     
-        @foreach ($exportpdf as $booking)
+    <table>
+        <thead>
             <tr>
-                <td>{{ $loop->index + 1 }}</td>
-                <td>{{ $booking->date }} ({{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }})</td>
-                <td>{{ $booking->description }}</td> 
-                <td>
-                    @foreach($booking->users as $user)
-                        {{ $user->name }}@if(!$loop->last), @endif
-                    @endforeach
-                </td>
-                {{-- <td>
-                    @if ($booking->approved)
-                        <span class="badge bg-success">Approved</span>
-                    @else
-                        <span class="badge bg-warning text-dark">Pending</span>
-                    @endif
-                </td>
-                <td>
-                    @if (!$booking->approved)
-                        <form action="{{ route('admin.bookings.approve', $booking->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            <button type="submit" class="btn btn-primary btn-sm">Approve</button>
-                        </form>
-                    @else
-                        <button class="btn btn-secondary btn-sm" disabled>Already Approved</button>
-                    @endif
-                </td> --}}
+                <th>#</th>
+                <th>Date & Time</th>
+                <th>Description</th>
+                <th>Users</th>
             </tr>
-        @endforeach
-    </tbody>
+        </thead>
+        <tbody>
+            @foreach ($exportpdf as $booking)
+                <tr>
+                    <td>{{ $loop->index + 1 }}</td>
+                    <td>{{ $booking->date }} ({{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }})</td>
+                    <td>{{ $booking->description }}</td> 
+                    <td>
+                        @foreach($booking->users as $user)
+                            {{ $user->name }}@if(!$loop->last), @endif
+                        @endforeach
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
     </table>
 </body>
 </html>

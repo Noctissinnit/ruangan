@@ -32,9 +32,9 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- icon -->
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMvKMEALPm3zYd5y7Ff13/UhgM+J7B7EXGk80fo" crossorigin="anonymous">
-    
+    <link rel="icon" href="{{ asset('images/logoykbs.png') }}" type="image/png">
+    {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMvKMEALPm3zYd5y7Ff13/UhgM+J7B7EXGk80fo" crossorigin="anonymous"> --}}
+    <link rel="stylesheet" href="/css/home.css">
     <script src="/js/app.js"></script>
     <script src="/js/validate.js"></script>
     
@@ -73,8 +73,10 @@
                     @endif
                 </a>
                 @auth
-                    <a class="nav-link ms-1 mt-1" href="{{ route('admin.dashboard') }}">Dashboard</a>
-                    <a class="nav-link ms-3 mt-1" href="{{ route('rooms.index') }}">Rooms</a>
+                    <a class="nav-link ms-1 mt-1" href="{{ route(auth()->user()->isAdmin() ? 'admin.dashboard' : 'user.dashboard') }}">Dashboard</a>
+                    @admin
+                        <a class="nav-link ms-3 mt-1" href="{{ route('rooms.index') }}">Rooms</a>
+                    @endadmin
                 @endauth
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -95,6 +97,9 @@
                             <li class="nav-item bg-success rounded">
                                 <a class="nav-link text-light" href="{{ route('login.google') }}">{{ __('Login sebagai User') }}</a>
                             </li> --}}
+                            <li class="nav-item bg-primary rounded">
+                                <a class="nav-link text-light" href="{{ route('login') }}">{{ __('Login') }}</a>
+                            </li>
                         @else
                         <li class="nav-item bg-primary rounded">
                                 <a id="nav-link" class="nav-link text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

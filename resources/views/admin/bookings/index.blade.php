@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('head')
+<link rel="stylesheet" href="/css/admin/showbooking.css">
 <script>
     let inputFilterDate;
     $(document).ready(() => {

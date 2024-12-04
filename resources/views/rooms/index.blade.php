@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+<link rel="stylesheet" href="/css/admin/room.css">
 <div class="container">
     <div class="row">
         <div class="col-md-12">
