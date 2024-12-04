@@ -133,8 +133,8 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
             <!-- Modal Body -->
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="user_name">Nama Pengguna</label>
-                    <input id="form-booking-user-name" class="form-control" value="{{ auth()->user()->name ?? '' }}" readonly />
+                    <label for="user_name">Hi, <span id="form-booking-user-name">{{ auth()->user()->name ?? '' }}</span></label>
+                    {{-- <input id="form-booking-user-name" class="form-control" value="{{ auth()->user()->name ?? '' }}" readonly /> --}}
                 </div>
                 <div class="form-group">
                     <label for="date">Tanggal</label>

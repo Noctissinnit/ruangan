@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\UserLeaveDashboard;
 use App\Schedules\DeleteExpiredBookings;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;

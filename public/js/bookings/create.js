@@ -22,9 +22,9 @@ $(document).ready(() => {
     //     $('#form-booking>input[name="date"]').val(today.toISOString().substring(0,10));
     //     $("#loginModal").modal("show");
     // });
-    $('#btn-history-add-booking').click(function(){
+    $('#btn-history-add-booking').click(function () {
         const today = new Date();
-        $('#form-booking>input[name="date"]').val(today.toISOString().substring(0,10));
+        $('#form-booking>input[name="date"]').val(today.toISOString().substring(0, 10));
         $('#loginModal').modal('show');
         $('#bookingHistoryModal').modal('hide');
 
@@ -35,22 +35,22 @@ $(document).ready(() => {
         // url.searchParams.set('bookings_date', $('#form-booking>input[name="date"]').val());
         // location.href = url.toString();
     });
-    
+
     $("#form-login").submit(checkLogin);
     $('#btn-booking-form-close').click(resetSession);
     $('#form-booking').submit(async e => {
         e.preventDefault();
-        if(isBookingPost) return location.reload();
+        if (isBookingPost) return location.reload();
 
         const formData = new FormData(e.currentTarget);
-        if(!validateEmptyForm(formData, {
+        if (!validateEmptyForm(formData, {
             'start_time': 'Jam',
             'end_time': 'Jam',
             'description': 'Deskripsi',
             'members': 'Peserta',
         })) return;
 
-        if(isTimeLess(formData.get("end_time"), formData.get("start_time"))){
+        if (isTimeLess(formData.get("end_time"), formData.get("start_time"))) {
             alert("Jam Selesai tidak bisa kurang dari Jam Mulai.");
             return;
         }
@@ -60,11 +60,11 @@ $(document).ready(() => {
 
         const rooms = await $.get(roomListUrl);
         let bookings = rooms.filter(dat => dat.id === roomId)[0].bookings;
-        if(bookings.length > 0){
+        if (bookings.length > 0) {
             const bookingsToday = bookings.filter(dat => isDateEqual(
                 new Date($('#form-booking>input[name="date"]').val()),
                 new Date(dat.date)));
-            if(bookingsToday.some(dat => isTimeRangeOverlap(formData.get("start_time"), formData.get("end_time"), formatTime(dat.start_time), formatTime(dat.end_time)))){
+            if (bookingsToday.some(dat => isTimeRangeOverlap(formData.get("start_time"), formData.get("end_time"), formatTime(dat.start_time), formatTime(dat.end_time)))) {
                 alert("Jam peminjaman sudah digunakan oleh user lain.");
                 isBookingPost = false;
                 $('#loading').css('display', 'none');
@@ -74,17 +74,17 @@ $(document).ready(() => {
         await $.post($('#form-booking').attr('action'), $('#form-booking').serialize());
         location.reload();
     });
-    
+
     $('button[data-bs-dismiss="modal"]').click(clearForms);
 
-    $(document).on('keydown', function(e){
+    $(document).on('keydown', function (e) {
         if ((e.metaKey || e.ctrlKey) && e.key === 'h') {
             toggleOfficeMode();
         }
     });
 });
 
-async function showBookingHistory(date, dateStr){
+async function showBookingHistory(date, dateStr) {
     $('#bookingHistoryDate').html(dateStr);
 
     const url = new URL(listUrl);
@@ -95,7 +95,7 @@ async function showBookingHistory(date, dateStr){
     const tableBody = $('#bookingHistoryTable>tbody');
 
     tableBody.html('');
-    if(bookingsData.length > 0){
+    if (bookingsData.length > 0) {
         bookingsData.forEach((data, i) => {
             tableBody.append(`
                 <tr>
@@ -112,12 +112,12 @@ async function showBookingHistory(date, dateStr){
 
     $('#form-booking>input[name="date"]').val(dateStr);
     $('#form-booking-date').val(dateStr);
-    if(!isOfficeMode) $('#btn-history-add-booking').css('display', isAtLeastOneDayLess(date, new Date()) ? 'none' : '');
+    if (!isOfficeMode) $('#btn-history-add-booking').css('display', isAtLeastOneDayLess(date, new Date()) ? 'none' : '');
 
     $('#bookingHistoryModal').modal('show');
 }
 
-function initTimepickers(){
+function initTimepickers() {
     $('input.timepicker').datetimepicker({
         datepicker: false,
         format: 'H:i',
@@ -136,7 +136,7 @@ function generateCalendar() {
         dateClick: function (info) {
             showBookingHistory(info.date, info.dateStr);
         },
-        events: async function(info, successCallback, failureCallback) {
+        events: async function (info, successCallback, failureCallback) {
             try {
                 // Fetch bookings within the view range
                 const url = new URL(listUrl);
@@ -164,14 +164,14 @@ function generateCalendar() {
                         }
                     };
                 });
-                
+
                 successCallback(events);
             } catch (error) {
                 console.error('Error fetching bookings:', error);
                 failureCallback(error);
             }
         },
-        eventClick: function(info) {
+        eventClick: function (info) {
             const booking = info.event.extendedProps;
             const bookingDetailsHtml = `
                 <p><strong>Booked by:</strong> ${booking.user_name}</p>
@@ -212,15 +212,15 @@ function isToday(dateString) {
 
     // Get today's date
     const today = new Date();
-    
+
     return isDateEqual(inputDate, today);
 }
 
-function isDateEqual(date1, date2){
+function isDateEqual(date1, date2) {
     // Check if the input date is today by comparing the year, month, and day
     return date1.getFullYear() === date2.getFullYear() &&
-           date1.getMonth() === date2.getMonth() &&
-           date1.getDate() === date2.getDate();
+        date1.getMonth() === date2.getMonth() &&
+        date1.getDate() === date2.getDate();
 }
 
 function isTimeRangeOverlap(start1, end1, start2, end2) {
@@ -243,19 +243,19 @@ function isAtLeastOneDayLess(date1, date2) {
 }
 
 function isTimeLess(time1, time2) {
-  // Parse the times as hours and minutes (assuming "HH:mm" format)
-  const [hours1, minutes1] = time1.split(':').map(Number);
-  const [hours2, minutes2] = time2.split(':').map(Number);
+    // Parse the times as hours and minutes (assuming "HH:mm" format)
+    const [hours1, minutes1] = time1.split(':').map(Number);
+    const [hours2, minutes2] = time2.split(':').map(Number);
 
-  // Create Date objects for comparison
-  const date1 = new Date();
-  date1.setHours(hours1, minutes1);
+    // Create Date objects for comparison
+    const date1 = new Date();
+    date1.setHours(hours1, minutes1);
 
-  const date2 = new Date();
-  date2.setHours(hours2, minutes2);
+    const date2 = new Date();
+    date2.setHours(hours2, minutes2);
 
-  // Compare the two times
-  return date1 < date2;
+    // Compare the two times
+    return date1 < date2;
 }
 
 function updateDateTime() {
@@ -275,7 +275,7 @@ function updateDateTime() {
 
 async function updateBookings() {
     const url = new URL(listUrl);
-    url.searchParams.set('date', new Date().toISOString().substring(0,10));
+    url.searchParams.set('date', new Date().toISOString().substring(0, 10));
     url.searchParams.set('room_id', roomId);
 
     const bookingsData = await $.get(url.toString());
@@ -320,6 +320,7 @@ async function checkLogin(e) {
         $('#form-booking>input[name="email"]').val(res.data.email);
         $('#form-booking>input[name="department_id"]').val(res.data.department.id);
         $('#booking-user-department').val(res.data.department.name);
+        $('#form-booking-user-name').html(res.data.name);
 
         $("#loginModal").modal("hide");
         $("#bookingModal").modal("show");
@@ -328,15 +329,15 @@ async function checkLogin(e) {
     }
 }
 
-function clearForms(){
+function clearForms() {
     $('#form-login')[0].reset();
     $('#form-booking')[0].reset();
 }
 
-function tryGoogleCallback(isLoggedIn = true){
-    if(!isGoogleCallback) return false;
-    
-    if(isLoggedIn) {
+function tryGoogleCallback(isLoggedIn = true) {
+    if (!isGoogleCallback) return false;
+
+    if (isLoggedIn) {
         $('#form-booking-date').val($('#form-booking>input[name="date"]').val());
     } else {
         $('#form-booking>input[name="date"]').val(bookingsDate);
@@ -348,19 +349,19 @@ function tryGoogleCallback(isLoggedIn = true){
     return true;
 }
 
-function toggleOfficeMode(){
+function toggleOfficeMode() {
     isOfficeMode = !isOfficeMode;
 
-    if(isOfficeMode){
+    if (isOfficeMode) {
         $('#btn-history-add-booking').css('display', 'none');
     }
 }
 
-async function resetSession(){
+async function resetSession() {
     await $.get(resetSessionUrl);
 }
 
-async function updateCurrentAvailable(){
+async function updateCurrentAvailable() {
     const res = await $.get(roomAvailableUrl);
     $('#current-available-status').html(res.available ? 'Tersedia' : 'Tidak Tersedia');
 }

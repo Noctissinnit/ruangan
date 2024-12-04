@@ -34,7 +34,6 @@
     <!-- icon -->
     <link rel="icon" href="{{ asset('images/logoykbs.png') }}" type="image/png">
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMvKMEALPm3zYd5y7Ff13/UhgM+J7B7EXGk80fo" crossorigin="anonymous"> --}}
-    <link rel="stylesheet" href="/css/home.css">
     <script src="/js/app.js"></script>
     <script src="/js/validate.js"></script>
     
