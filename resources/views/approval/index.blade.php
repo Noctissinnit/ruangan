@@ -120,25 +120,20 @@
             <div class="details">
                 <p><strong>Tempat:</strong> {{ $booking->room->name }}</p>
                 <p><strong>Tanggal:</strong> {{ $booking->date }}</p>
-                <p><strong>Waktu:</strong> {{ $booking->start_time }} - {{ $booking->end_time }}</p>
+                <p><strong>Waktu:</strong> {{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }}</p>
             </div>
             <p>Terima kasih atas perhatianmu!</p>
 
             <!-- Tombol Accept dan Reject dengan Flexbox untuk penyusunan bersebelahan -->
             <div class="button-group">
                 <!-- Tombol Accept -->
-                <form action="{{ route('approval.accept') }}" method="POST" class="d-inline">
-                    @csrf
-                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                <a href="{{ route('approval.confirm', ['booking' => $booking, 'user' => $user, 'response' => 'hadir']) }}">
                     <button type="submit" class="btn btn-success">Accept</button>
-                </form>
+                </a>
 
-                <!-- Tombol Reject -->
-                <form action="{{ route('approval.reject') }}" method="POST" class="d-inline">
-                    @csrf
-                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                <a href="{{ route('approval.confirm', ['booking' => $booking, 'user' => $user, 'response' => 'no response']) }}">
                     <button type="submit" class="btn btn-danger">Reject</button>
-                </form>
+                </a>
             </div>
         </div>
 
