@@ -23,7 +23,7 @@ class ApprovalController extends Controller
         // Jika user_id tidak ditemukan dalam request
         return redirect()->route('home')->with('error', 'User ID is required.');
     }
-
+  
     /**
      * Handle accepting the invitation.
      *
