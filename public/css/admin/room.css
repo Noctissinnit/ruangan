@@ -5,4 +5,9 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', Arial, sans-serif; /* Gunakan font modern */
+    
+}
+
+body {
+    background-color: #D5F0FF;
 }

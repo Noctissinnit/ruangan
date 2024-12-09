@@ -6,8 +6,13 @@
     padding: 0;
     box-sizing: border-box;
     font-family: 'Poppins', Arial, sans-serif; /* Gunakan font modern */
+    
 }
 
 .form-group {
     margin-top: 7.5px;
+}
+
+body {
+    background-color: #D5F0FF;
 }
