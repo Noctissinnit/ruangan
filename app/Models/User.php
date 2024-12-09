@@ -14,7 +14,7 @@ class User extends Authenticatable
     use HasFactory, Notifiable;
     protected $primaryKey = 'id';
 
-    protected $table = 'booking_users';
+    protected $table = 'users';
 
     /**
      * The attributes that are mass assignable.

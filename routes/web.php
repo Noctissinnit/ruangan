@@ -31,7 +31,7 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Route untuk Approval
-    Route::get('/approval', [ApprovalController::class, 'utama'])->name('approval.utama');
+    Route::get('/approval/{booking}/{user}', [ApprovalController::class, 'index'])->name('approval.index');
     Route::post('/approval/accept', [ApprovalController::class, 'accept'])->name('approval.accept');
     Route::post('/approval/reject', [ApprovalController::class, 'reject'])->name('approval.reject');
 
