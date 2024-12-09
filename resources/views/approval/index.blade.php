@@ -67,17 +67,38 @@
         }
         .btn {
             display: inline-block;
-            background-color: #4CAF50;
             color: #ffffff;
             text-decoration: none;
             padding: 12px 20px;
             border-radius: 6px;
             font-size: 16px;
-            margin: 20px 0;
+            margin: 20px 10px;
             font-weight: bold;
         }
         .btn:hover {
+            opacity: 0.8;
+        }
+        /* Tombol Accept */
+        .btn-success {
+            background-color: #4CAF50;
+        }
+        .btn-success:hover {
             background-color: #45a049;
+        }
+
+        /* Tombol Reject */
+        .btn-danger {
+            background-color: #f44336;
+        }
+        .btn-danger:hover {
+            background-color: #e53935;
+        }
+
+        /* Menyusun tombol secara bersebelahan */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Memberikan jarak antar tombol */
         }
     </style>
 </head>
@@ -86,7 +107,6 @@
         <!-- Header -->
         <div class="email-header">
             <img src="https://i.ibb.co/9qBb3fp/logoykbs-1.png" alt="Logo">
-
             <h1>Undangan</h1>
         </div>
 
@@ -102,9 +122,24 @@
                 <p><strong>Tanggal:</strong> {{ $booking->date }}</p>
                 <p><strong>Waktu:</strong> {{ $booking->start_time }} - {{ $booking->end_time }}</p>
             </div>
-            {{-- <p>Harap konfirmasi kehadiranmu sesegera mungkin dengan mengklik tombol di bawah ini:</p>
-            <a href="#" class="btn">Konfirmasi Kehadiran</a> --}}
             <p>Terima kasih atas perhatianmu!</p>
+
+            <!-- Tombol Accept dan Reject dengan Flexbox untuk penyusunan bersebelahan -->
+            <div class="button-group">
+                <!-- Tombol Accept -->
+                <form action="{{ route('approval.accept') }}" method="POST" class="d-inline">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                    <button type="submit" class="btn btn-success">Accept</button>
+                </form>
+
+                <!-- Tombol Reject -->
+                <form action="{{ route('approval.reject') }}" method="POST" class="d-inline">
+                    @csrf
+                    <input type="hidden" name="user_id" value="{{ $user->id }}">
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </form>
+            </div>
         </div>
 
         <!-- Footer -->
