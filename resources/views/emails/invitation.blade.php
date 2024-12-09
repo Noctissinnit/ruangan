@@ -102,8 +102,8 @@
                 <p><strong>Tanggal:</strong> {{ $booking->date }}</p>
                 <p><strong>Waktu:</strong> {{ $booking->start_time }} - {{ $booking->end_time }}</p>
             </div>
-            {{-- <p>Harap konfirmasi kehadiranmu sesegera mungkin dengan mengklik tombol di bawah ini:</p>
-            <a href="#" class="btn">Konfirmasi Kehadiran</a> --}}
+            <p>Harap konfirmasi kehadiranmu sesegera mungkin dengan mengklik tombol di bawah ini:</p>
+            <a href="{{ route('approval.index', ['booking' => $booking, 'user' => $user]) }}" class="btn">Konfirmasi Kehadiran</a>
             <p>Terima kasih atas perhatianmu!</p>
         </div>
 

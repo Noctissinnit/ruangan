@@ -23,9 +23,7 @@ $(document).ready(() => {
     //     $("#loginModal").modal("show");
     // });
     $('#btn-history-add-booking').click(function () {
-        const today = new Date();
-        $('#form-booking>input[name="date"]').val(today.toISOString().substring(0, 10));
-        $('#loginModal').modal('show');
+    $('#loginModal').modal('show');
         $('#bookingHistoryModal').modal('hide');
 
         // if(tryGoogleCallback(true)) return;
@@ -49,6 +47,8 @@ $(document).ready(() => {
             'description': 'Deskripsi',
             'members': 'Peserta',
         })) return;
+
+        console.log($('#form-booking>input[name="date"]').val());
 
         if (isTimeLess(formData.get("end_time"), formData.get("start_time"))) {
             alert("Jam Selesai tidak bisa kurang dari Jam Mulai.");
@@ -217,6 +217,8 @@ function isToday(dateString) {
 }
 
 function isDateEqual(date1, date2) {
+    console.log(date1);
+    console.log(date2);
     // Check if the input date is today by comparing the year, month, and day
     return date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&

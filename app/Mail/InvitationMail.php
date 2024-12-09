@@ -17,7 +17,7 @@ use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Support\Facades\Storage;
 use Spatie\IcalendarGenerator\Enums\ParticipationStatus;
 use Spatie\IcalendarGenerator\Properties\TextProperty;
- 
+
 class InvitationMail extends Mailable
 {
     use Queueable, SerializesModels;
@@ -48,8 +48,8 @@ class InvitationMail extends Mailable
 
         $calendar = Calendar::create()
             ->appendProperty(TextProperty::create('METHOD', 'REQUEST'))
-            ->
-            
+            ->event($event)->get();
+
         $filename = 'calendars/' . Str::uuid() . '.ics';
         Storage::put($filename, $calendar);
 

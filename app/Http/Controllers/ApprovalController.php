@@ -1,27 +1,17 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Booking;
 use App\Models\User;
 
 use Illuminate\Http\Request;
 
 class ApprovalController extends Controller
 {
-    public function index(Request $request)
+    public function index(Request $request, Booking $booking, User $user)
     {
-        // Mengambil user_id dari request (misalnya melalui URL atau query string)
-        $userId = $request->input('user_id');
-
-        // Cek jika user_id ada dan ambil data user dari database
-        if ($userId) {
-            $user = User::findOrFail($userId);
-
-            // Kirim data user ke view
-            return view('approval.utama', compact('user'));
-        }
-
-        // Jika user_id tidak ditemukan dalam request
-        return redirect()->route('home')->with('error', 'User ID is required.');
+        return view('approval.index', compact('booking', 'user'));
     }
 
     /**
@@ -42,7 +32,7 @@ class ApprovalController extends Controller
         $user->status = 'hadir';
         $user->save();
 
-        return redirect()->route('approval.utama', ['user_id' => $userId])->with('success', 'Invitation accepted.');
+        return redirect()->route('approval.index', ['user_id' => $userId])->with('success', 'Invitation accepted.');
     }
 
     /**
@@ -63,6 +53,6 @@ class ApprovalController extends Controller
         $user->status = 'no response';
         $user->save();
 
-        return redirect()->route('approval.utama', ['user_id' => $userId])->with('success', 'Invitation declined.');
+        return redirect()->route('approval.index', ['user_id' => $userId])->with('success', 'Invitation declined.');
     }
 }
