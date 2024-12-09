@@ -67,17 +67,38 @@
         }
         .btn {
             display: inline-block;
-            background-color: #4CAF50;
             color: #ffffff;
             text-decoration: none;
             padding: 12px 20px;
             border-radius: 6px;
             font-size: 16px;
-            margin: 20px 0;
+            margin: 20px 10px;
             font-weight: bold;
         }
         .btn:hover {
+            opacity: 0.8;
+        }
+        /* Tombol Accept */
+        .btn-success {
+            background-color: #4CAF50;
+        }
+        .btn-success:hover {
             background-color: #45a049;
+        }
+
+        /* Tombol Reject */
+        .btn-danger {
+            background-color: #f44336;
+        }
+        .btn-danger:hover {
+            background-color: #e53935;
+        }
+
+        /* Menyusun tombol secara bersebelahan */
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 10px; /* Memberikan jarak antar tombol */
         }
     </style>
 </head>
@@ -86,7 +107,6 @@
         <!-- Header -->
         <div class="email-header">
             <img src="https://i.ibb.co/9qBb3fp/logoykbs-1.png" alt="Logo">
-
             <h1>Undangan</h1>
         </div>
 
@@ -100,11 +120,21 @@
             <div class="details">
                 <p><strong>Tempat:</strong> {{ $booking->room->name }}</p>
                 <p><strong>Tanggal:</strong> {{ $booking->date }}</p>
-                <p><strong>Waktu:</strong> {{ $booking->start_time }} - {{ $booking->end_time }}</p>
+                <p><strong>Waktu:</strong> {{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }}</p>
             </div>
-            <p>Harap konfirmasi kehadiranmu sesegera mungkin dengan mengklik tombol di bawah ini:</p>
-            <a href="{{ route('approval.show', ['booking' => $booking, 'user' => $user]) }}" class="btn">Konfirmasi Kehadiran</a>
             <p>Terima kasih atas perhatianmu!</p>
+
+            <!-- Tombol Accept dan Reject dengan Flexbox untuk penyusunan bersebelahan -->
+            <div class="button-group">
+                <!-- Tombol Accept -->
+                <a href="{{ route('approval.confirm', ['booking' => $booking, 'user' => $user, 'response' => 'hadir']) }}">
+                    <button type="submit" class="btn btn-success">Accept</button>
+                </a>
+
+                <a href="{{ route('approval.confirm', ['booking' => $booking, 'user' => $user, 'response' => 'no response']) }}">
+                    <button type="submit" class="btn btn-danger">Reject</button>
+                </a>
+            </div>
         </div>
 
         <!-- Footer -->

@@ -13,7 +13,12 @@ class ApprovalController extends Controller
     {
         return view('approval.index', compact('booking', 'user'));
     }
-  
+
+    public function show(Request $request, Booking $booking, User $user)
+    {
+        return view('approval.confirm', compact('booking', 'user'));
+    }
+
     /**
      * Handle accepting the invitation.
      *
@@ -23,6 +28,6 @@ class ApprovalController extends Controller
     public function confirm(Request $request, Booking $booking, User $user, string $response)
     {
         $booking->users()->updateExistingPivot($user->id, ['status' => $response]);
-        return redirect()->route('home')->with('success', 'Invitation accepted.');
+        return redirect()->route('approval.index', ['booking' => $booking, 'user' => $user])->with('success', 'Invitation accepted.');
     }
 }
