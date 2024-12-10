@@ -38,7 +38,7 @@
                         </div>
                         
                         <div class="form-group mb-3">
-                            <label for="name" class="form-label">Deskripsi</label>
+                            <label for="name" class="form-label">Kapasitas</label>
                             <textarea name="description" id="description" class="form-control" required>{{ $room->description }}</textarea>
                         </div>
 

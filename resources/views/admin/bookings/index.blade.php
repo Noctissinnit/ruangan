@@ -23,6 +23,19 @@
 @endsection
 
 @section('content')
+
+<style>
+    bg-green-500 {
+    background-color: #28a745; /* Hijau untuk status Hadir */
+    color: #fff;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.bg-transparent {
+    background-color: transparent;
+}
+</style>
 <div class="container mt-4">
     <div class="row">
         <div class="col-6"><h3>{{ $room->name }}</h3></div>
@@ -60,7 +73,11 @@
                 <td>{{ $booking->description }}</td> 
                 <td>
                     @foreach($booking->users as $user)
-                        {{ $user->name }}@if(!$loop->last), @endif
+                        {{ $user->name }} (
+                        <span class="{{ $user->pivot->status === 'Hadir' ? 'badge bg-success' : '' }}">
+                            {{ $user->pivot->status ?? 'Tidak Hadir' }}
+                        </span> )
+                        @if(!$loop->last), @endif
                     @endforeach
                 </td>
                 {{-- <td>

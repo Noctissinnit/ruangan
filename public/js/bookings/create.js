@@ -364,9 +364,14 @@ async function resetSession() {
 }
 
 async function updateCurrentAvailable() {
-    const res = await $.get(roomAvailableUrl);
-    $('#current-available-status').html(res.available ? 'Tersedia' : 'Tidak Tersedia');
+    const res = await $.get(roomAvailableUrl); // `res` diasumsikan sebagai array status ruangan
+
+    res.forEach(room => {
+        // Update status berdasarkan ID ruangan
+        $(`#current-available-status-${room.id}`).html(room.available ? 'Tersedia' : 'Tidak Tersedia');
+    });
 }
+
 
 setInterval(updateDateTime, 1000);
 setInterval(updateCurrentAvailable, 1000);
