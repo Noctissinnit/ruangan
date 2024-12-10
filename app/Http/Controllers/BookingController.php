@@ -303,4 +303,36 @@ class BookingController extends Controller
             $request->type === 'pdf' ? \Maatwebsite\Excel\Excel::DOMPDF : \Maatwebsite\Excel\Excel::XLSX
         );
     }
+
+    public function roomStatus($id)
+        {
+            $room = Room::find($id);
+            if (!$room) {
+                return response()->json(['error' => 'Room not found'], 404);
+            }
+
+            return response()->json([
+                'id' => $room->id,
+                'status' => $room->status,
+            ]);
+        }
+
+        public function updateRoomStatus(int $roomId)
+        {
+            $isBooked = Booking::where('room_id', $roomId)
+                ->where('date', '>=', Carbon::today())
+                ->where('start_time', '<=', Carbon::now())
+                ->where('end_time', '>=', Carbon::now())
+                ->exists();
+        
+            $room = Room::find($roomId);
+            if ($room) {
+                $room->status = $isBooked ? 'Tidak Tersedia' : 'Tersedia';
+                $room->save();
+            }
+        
+            return response()->json(['success' => true]);
+        }
+        
+
 }

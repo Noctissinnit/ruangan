@@ -26,6 +26,11 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
         return view('terms-of-services');
     })->name('terms-of-services');
 
+    // Route untuk Status Ruangan pada Home
+    Route::get('/rooms/{id}/status', [BookingController::class, 'roomStatus'])->name('rooms.status');
+    Route::get('/rooms/{id}/update-status', [BookingController::class, 'updateRoomStatus'])->name('rooms.update-status');
+
+
 
     // Route untuk halaman utama 
     Route::get('/', [HomeController::class, 'index'])->name('home');

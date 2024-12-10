@@ -40,7 +40,11 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
                     <div id="current-time"></div>
                 </div>
                 <div class="col-md-4">
-                    <div id="current-available">Status: <span id="current-available-status"></span></div>
+                    Status: 
+                    <span id="current-available-status-{{ $room->id }}" 
+                        class="{{ $room->status == 'Tersedia' ? 'text-success' : 'text-danger' }}">
+                      {{ $room->status }}
+                  </span>
                 </div>
             </div>
         </div>
