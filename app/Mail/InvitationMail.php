@@ -71,9 +71,11 @@ class InvitationMail extends Mailable
      */
     public function content(): Content
     {
+        info($this->booking->users()->where('user_id', $this->user->id)->first()->pivot);
+        $uniqueId = $this->booking->users()->where('user_id', $this->user->id)->first()->pivot->unique_id;
         return new Content(
             view: 'emails.invitation',
-            with: ['user' => $this->user, 'booking' => $this->booking]
+            with: ['user' => $this->user, 'booking' => $this->booking, 'uniqueId' => $uniqueId]
         );
     }
 

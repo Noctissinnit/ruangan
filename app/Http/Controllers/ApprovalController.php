@@ -3,22 +3,29 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\BookingUser;
 use App\Models\User;
 
 use Illuminate\Http\Request;
 
 class ApprovalController extends Controller
 {
-    public function index(Request $request, Booking $booking, User $user)
+    public function index(Request $request, string $id)
     {
-        $bookingUsers = $booking->users()->where('user_id', $user->id)->first();
-        $status = $bookingUsers->pivot->status;
+        $bookingUsers = BookingUser::where('unique_id', $id)->first();
+        $status = $bookingUsers->status;
+        $booking = $bookingUsers->booking;
+        $user = $bookingUsers->user;
         return view('approval.index', compact('booking', 'user', 'status'));
     }
 
-    public function show(Request $request, Booking $booking, User $user)
+    public function show(Request $request, string $id)
     {
-        return view('approval.confirm', compact('booking', 'user'));
+        $bookingUsers = BookingUser::where('unique_id', $id)->first();
+        $booking = $bookingUsers->booking;
+        $user = $bookingUsers->user;
+        $uniqueId = $id;
+        return view('approval.confirm', compact('uniqueId', 'booking', 'user'));
     }
 
     /**
@@ -27,9 +34,13 @@ class ApprovalController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function confirm(Request $request, Booking $booking, User $user, string $response)
+    public function confirm(Request $request, string $id, string $response)
     {
-        $booking->users()->updateExistingPivot($user->id, ['status' => $response]);
-        return redirect()->route('approval.index', ['booking' => $booking, 'user' => $user])->with('success', 'Invitation accepted.');
+        $bookingUser = BookingUser::where('unique_id', $id);
+        $bookingUser->update(['status' => $response]);
+
+        $bookingUser = $bookingUser->first();
+        return redirect()->route('approval.index', ['id' => $id])
+            ->with('success', 'Invitation accepted.');
     }
 }

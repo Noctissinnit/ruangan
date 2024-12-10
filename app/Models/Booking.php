@@ -18,7 +18,7 @@ class Booking extends Model
     public function users()
     {
         return $this->belongsToMany(User::class, 'booking_users')
-            ->withPivot('status');
+            ->withPivot('status', 'unique_id');
     }
 
     public function user()

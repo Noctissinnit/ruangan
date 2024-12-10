@@ -127,11 +127,11 @@
             <!-- Tombol Accept dan Reject dengan Flexbox untuk penyusunan bersebelahan -->
             <div class="button-group">
                 <!-- Tombol Accept -->
-                <a href="{{ route('approval.confirm', ['booking' => $booking, 'user' => $user, 'response' => 'hadir']) }}">
+                <a href="{{ route('approval.confirm', ['id' => $uniqueId, 'response' => 'hadir']) }}">
                     <button type="submit" class="btn btn-success">Accept</button>
                 </a>
 
-                <a href="{{ route('approval.confirm', ['booking' => $booking, 'user' => $user, 'response' => 'no response']) }}">
+            <a href="{{ route('approval.confirm', ['id' => $uniqueId, 'response' => 'no response']) }}">
                     <button type="submit" class="btn btn-danger">Reject</button>
                 </a>
             </div>

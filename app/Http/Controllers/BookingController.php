@@ -20,6 +20,7 @@ use Google\Service\Calendar\EventDateTime;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Str;
 
 class BookingController extends Controller
 {
@@ -89,7 +90,6 @@ class BookingController extends Controller
     // Menyimpan booking baru
     public function store(Request $request)
     {
-        info('Hello World!');
         $request->validate([
             'nis' => 'required',
             'password' => 'required|numeric',
@@ -115,7 +115,17 @@ class BookingController extends Controller
             // 'approved' => false, // Menunggu approval
             "approved" => true, // Otomatis approve
         ]));
-        if ($request->users) $booking->users()->sync($request->users);
+        if ($request->users) {
+            $users = $request->users;
+
+            $syncData = [];
+            foreach ($users as $userId) {
+                $syncData[$userId] = [
+                    'unique_id' => Str::random(20),
+                ];
+            }
+            $booking->users()->sync($syncData);
+        }
         $users = Booking::where('id', $booking->id)->first()->users;
 
         foreach ($users as $user) {

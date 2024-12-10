@@ -48,8 +48,6 @@ $(document).ready(() => {
             'members': 'Peserta',
         })) return;
 
-        console.log($('#form-booking>input[name="date"]').val());
-
         if (isTimeLess(formData.get("end_time"), formData.get("start_time"))) {
             alert("Jam Selesai tidak bisa kurang dari Jam Mulai.");
             return;
@@ -217,8 +215,6 @@ function isToday(dateString) {
 }
 
 function isDateEqual(date1, date2) {
-    console.log(date1);
-    console.log(date2);
     // Check if the input date is today by comparing the year, month, and day
     return date1.getFullYear() === date2.getFullYear() &&
         date1.getMonth() === date2.getMonth() &&

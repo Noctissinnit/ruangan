@@ -30,9 +30,9 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     Route::get('/', [HomeController::class, 'index'])->name('home');
 
     // Route untuk Approval
-    Route::get('/approval/{booking}/{user}', [ApprovalController::class, 'index'])->name('approval.index');
-    Route::get('/approval/show/{booking}/{user}', [ApprovalController::class, 'show'])->name('approval.show');
-    Route::get('/approval/confirm/{booking}/{user}/{response}', [ApprovalController::class, 'confirm'])->name('approval.confirm');
+    Route::get('/approval/{id}', [ApprovalController::class, 'index'])->name('approval.index');
+    Route::get('/approval/show/{id}', [ApprovalController::class, 'show'])->name('approval.show');
+    Route::get('/approval/confirm/{id}/{response}', [ApprovalController::class, 'confirm'])->name('approval.confirm');
 
     // Route::get('/admin/login', [AdminController::class, 'indexLogin'])->name('rooms.index-login');
 
