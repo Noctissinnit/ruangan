@@ -121,7 +121,7 @@
                 <p><strong>Tempat:</strong> {{ $booking->room->name }}</p>
                 <p><strong>Tanggal:</strong> {{ $booking->date }}</p>
                 <p><strong>Waktu:</strong> {{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }}</p>
-                <p><strong>Status:</strong> {{ $status == 'hadir' ? 'Hadir' : 'Tidak Hadir'</p>
+                <p><strong>Status:</strong> {{ $status == 'hadir' ? 'Hadir' : 'Tidak Hadir' }}</p>
             </div>
             <p>Terima kasih atas perhatianmu!</p>
         </div>

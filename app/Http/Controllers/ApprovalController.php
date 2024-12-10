@@ -11,7 +11,9 @@ class ApprovalController extends Controller
 {
     public function index(Request $request, Booking $booking, User $user)
     {
-        return view('approval.index', compact('booking', 'user'));
+        $bookingUsers = $booking->users()->where('user_id', $user->id)->first();
+        $status = $bookingUsers->pivot->status;
+        return view('approval.index', compact('booking', 'user', 'status'));
     }
 
     public function show(Request $request, Booking $booking, User $user)
