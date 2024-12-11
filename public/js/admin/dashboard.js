@@ -1,5 +1,5 @@
 $(document).ready(() => {
-    $('#btn-add-user').click(function(){
+    $('#btn-add-user').click(function () {
         clearFormUser();
 
         const form = $('#form-user');
@@ -9,11 +9,11 @@ $(document).ready(() => {
 
         form.attr('action', userStoreUrl);
     })
-    $('.btn-edit-user').click(async function(){
+    $('.btn-edit-user').click(async function () {
         clearFormUser();
 
         const data = await $.get(`${userGetUrl}?id=${$(this).attr('id')}`);
-        
+
         const form = $('#form-user');
         form.find('input[name="password"]').css('display', 'none').removeAttr('required');
 
@@ -27,11 +27,22 @@ $(document).ready(() => {
         form.find(`select[name="jabatan_id"] option[value=${data.jabatan_id}]`).attr('selected', '');
 
         form.attr('action', userUpdateUrl);
-        
+
         $('#userModal').modal('show');
+    });
+
+    const inputFile = $('input[name="excel"]');
+    $('#form-user-btn-import').click(function (e) {
+        inputFile.trigger('click');
+    });
+    inputFile.on('change', e => {
+        if (inputFile[0].files.length < 1) {
+            return;
+        }
+        $('#form-user-import').submit();
     });
 });
 
-function clearFormUser(){
+function clearFormUser() {
     $('#form-user')[0].reset();
 }

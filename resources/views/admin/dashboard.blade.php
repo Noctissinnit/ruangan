@@ -12,7 +12,12 @@
 
 @section('content')
 <div class="container">
-    <button class="btn btn-primary" id="btn-add-user" data-bs-toggle="modal" data-bs-target="#userModal">Tambah User</button>
+    <form id="form-user-import" action="{{ route('user.import') }}" method="post" enctype="multipart/form-data">
+        @csrf
+        <button class="btn btn-primary" id="btn-add-user" type="button" data-bs-toggle="modal" data-bs-target="#userModal">Tambah User</button>
+        <input type="file" name="excel" accept=".xls,.xlsx" style="display: none">
+        <button id="form-user-btn-import" class="btn btn-success" type="button">Import Users</button>
+    </form>
     <table class="table table-bordered mt-3">
         <thead>
             <tr>
