@@ -79,11 +79,18 @@ class BookingController extends Controller
         ]);
         $user = User::where("nis", $request->nis)->with('department')->first();
         // $success = $user !== null && Hash::check($request->password, $user->password);
-        $success = $user !== null && Hash::check($request->password, $user->pin);
+        if ($user === null) {
+            return response()->json(['success' => false, 'message' => 'NIS atau Password salah. Silakan coba lagi.']);
+        }
+        if ($user->pin === null) {
+            return response()->json(['success' => false, 'message' => 'Akun ini belum memiliki PIN. Silahkan membuat PIN terlebih dahulu.']);
+        }
+        $success = Hash::check($request->password, $user->pin);
 
         return response()->json([
             "success" => $success,
-            "data" => $success ? $user : null
+            "data" => $success ? $user : null,
+            'message' => $success ? null : 'NIS atau Password salah. Silakan coba lagi.'
         ]);
     }
 

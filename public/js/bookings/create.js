@@ -323,7 +323,7 @@ async function checkLogin(e) {
         $("#loginModal").modal("hide");
         $("#bookingModal").modal("show");
     } else {
-        alert("NIS atau Password salah. Silakan coba lagi.");
+        error(res.message);
     }
 }
 

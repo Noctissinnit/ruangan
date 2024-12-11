@@ -44,6 +44,17 @@ class UserSeeder extends Seeder
         ]);
 
         User::create([
+            'name' => 'Anjing Sedboi',
+            'nis' => '999999',
+            'email' => 'anjingsedboi@gmail.com',
+            'password' => bcrypt('password'),
+            'role' => 'user',
+            'department_id' => 1,
+            'jabatan_id' => 1,
+            // 'pin' => bcrypt('111111'),
+        ]);
+
+        User::create([
             'name' => 'Noctis Yoru',
             'nis' => '987654',
             'email' => 'ncts.yoru@gmail.com',
@@ -58,17 +69,6 @@ class UserSeeder extends Seeder
             'name' => 'Bimo Satriaji',
             'nis' => '123456',
             'email' => 'bimosatriaji6@gmail.com',
-            'password' => bcrypt('password'),
-            'role' => 'user',
-            'department_id' => 1,
-            'jabatan_id' => 1,
-            'pin' => bcrypt('111111'),
-        ]);
-
-        User::create([
-            'name' => 'Anjing Sedboi',
-            'nis' => '999999',
-            'email' => 'anjingsedboi@gmail.com',
             'password' => bcrypt('password'),
             'role' => 'user',
             'department_id' => 1,

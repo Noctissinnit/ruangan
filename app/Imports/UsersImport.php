@@ -26,7 +26,6 @@ class UsersImport implements ToCollection
                     'name' => $row[0],
                     'email' => $row[1],
                     'nis' => $row[2],
-                    'pin' => $row[3],
                     'password' => $row[3],
                     'role' => $row[4],
                     'department_id' => is_numeric($row[5]) ? $row[5] : Department::where('name', $row[5])->first()->id,
