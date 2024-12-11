@@ -25,6 +25,7 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>NIS</th>
+                <th>PIN</th>
                 <th>Department</th>
                 <th>Jabatan</th>
                 <th>Role</th>
@@ -38,6 +39,7 @@
                 <td>{{ $user->name }}</td>
                 <td>{{ $user->email }}</td>
                 <td>{{ $user->nis }}</td>
+                <td>{{ ucfirst($user->pin) }}</td>
                 <td>{{ $user->department->name }}</td>
                 <td>{{ $user->jabatan->name ?? 'Tidak ada' }}</td>
                 <td>{{ ucfirst($user->role) }}</td>
