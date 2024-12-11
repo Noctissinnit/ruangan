@@ -1,17 +1,34 @@
 <?php
+
 namespace App\Http\Controllers;
 
+use App\Imports\UsersImport;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
+use Maatwebsite\Excel\Facades\Excel;
 
 class UserController extends Controller
 {
-    public function get(Request $request){
+    public function get(Request $request)
+    {
         return response()->json(User::where('id', $request->id)->first(['name', 'email', 'nis', 'department_id', 'jabatan_id']));
     }
-    
+
+    public function import(Request $request)
+    {
+        $request->validate([
+            'excel' => 'required|mimes:xlsx,xls'
+        ]);
+
+        $import = Excel::import(new UsersImport, $request->excel);
+        if ($import) {
+            return redirect()->route('admin.dashboard')->with('success', 'Berhasil mengimpor users.');
+        } else {
+            return redirect()->route('admin.dashboard')->with('error', 'Gagal mengimpor users.');
+        }
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -25,7 +42,7 @@ class UserController extends Controller
 
         User::create(array_merge(
             $request->all("name", "email", "nis", "department_id", 'jabatan_id'),
-            [ 'password' => Hash::make($request->password) ]
+            ['password' => Hash::make($request->password)]
         ));
 
         return redirect()->route("admin.dashboard");
@@ -48,10 +65,11 @@ class UserController extends Controller
 
         return redirect()->route("admin.dashboard");
     }
-    
-    public function destroy(User $user){
+
+    public function destroy(User $user)
+    {
         $user->delete();
-        
+
         return redirect()->route("admin.dashboard");
     }
     // Tampilkan halaman untuk melakukan booking

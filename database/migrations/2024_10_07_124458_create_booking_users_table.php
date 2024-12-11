@@ -16,7 +16,6 @@ return new class extends Migration
             $table->unsignedBigInteger('booking_id');
             $table->unsignedBigInteger('user_id');
             $table->foreign('booking_id')->references('id')->on('bookings')->onDelete('cascade');
-            $table->enum('status', ['no response', 'hadir'])->default('no response');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
         });

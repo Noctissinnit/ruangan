@@ -3,26 +3,38 @@
 namespace App\Imports;
 
 use App\Models\Department;
+use App\Models\Jabatan;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash;
-use Maatwebsite\Excel\Concerns\ToModel;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
 
-class UsersImport implements ToModel
+class UsersImport implements ToCollection
 {
     /**
-     * @param array $row
-     *
-     * @return \Illuminate\Database\Eloquent\Model|null
+     * @return string|array
      */
-    public function model(array $row)
+    public function uniqueBy()
     {
-        return new User([
-            'name' => $row[0],
-            'email' => $row[1],
-            'nis' => $row[2],
-            'department_id' => Department::where('name', $row[3])->first()->id,
-            'password' => Hash::make('@password123'),
-            'role' => 'user',
-        ]);
+        return 'email';
+    }
+    public function collection(Collection $rows)
+    {
+        foreach ($rows as $i => $row) {
+            if ($i === 0) continue;
+            try {
+                User::insert([
+                    'name' => $row[0],
+                    'email' => $row[1],
+                    'nis' => $row[2],
+                    'pin' => $row[3],
+                    'password' => $row[3],
+                    'role' => $row[4],
+                    'department_id' => is_numeric($row[5]) ? $row[5] : Department::where('name', $row[5])->first()->id,
+                    'jabatan_id' => is_numeric($row[6]) ? $row[5] : Jabatan::where('name', $row[5])->first()->id,
+                ]);
+            } catch (\Exception $e) {
+                info($e->getMessage());
+            }
+        }
     }
 }

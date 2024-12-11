@@ -64,6 +64,7 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
             Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
 
             Route::get('/admin/user', [UserController::class, 'get'])->name('user.get');
+            Route::post('/admin/user/import', [UserController::class, 'import'])->name('user.import');
             Route::post('/admin/user', [UserController::class, 'store'])->name('user.store');
             Route::put('/admin/user', [UserController::class, 'update'])->name('user.update');
             Route::get('/admin/user/destroy/{user}', [UserController::class, 'destroy'])->name('user.destroy');
