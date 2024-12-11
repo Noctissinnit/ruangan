@@ -39,20 +39,16 @@
     
     <script>
         $(document).ready(() => {
+            @if ($errors->any())
+                error("{{ $errors->first() }}")
+            @endif
+
             @if (session()->has('error'))
-                alert({
-                    title: "Error",
-                    text: "{{ session('error') }}",
-                    icon: "error"
-                });
+                error("{{ session('error') }}");
             @endif
 
             @if (session()->has('success'))
-                alert({
-                    title: "Berhasil",
-                    text: "{{ session('success') }}",
-                    icon: "success"
-                });
+                success("{{ session('success') }}");
             @endif
         });
     </script>

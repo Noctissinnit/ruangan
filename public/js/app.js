@@ -17,3 +17,11 @@ window.error = (value) => {
         icon: 'error'
     });
 }
+
+window.success = (value) => {
+    alert({
+        title: 'Success',
+        text: value,
+        icon: 'success'
+    });
+}

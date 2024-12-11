@@ -5,11 +5,7 @@
 function validateEmptyForm(form, fields) {
     for (const key in fields) {
         if (form.has(key) && form.get(key).length === 0) {
-            alert({
-                title: "Error",
-                text: `Kolom "${fields[key]}" harus di-isi!`,
-                icon: "error"
-            });
+            error(`Kolom "${fields[key]}" harus di-isi!`);
             return false;
         } else {
             console.warn(`Missing key "${key}" on form empty validation. Ignoring...`);
