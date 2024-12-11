@@ -25,8 +25,11 @@ class UserController extends Controller
 
         User::create(array_merge(
             $request->all("name", "email", "nis", "department_id", 'jabatan_id'),
-            [ 'password' => Hash::make($request->password) ]
+            [ 'password' => Hash::make($request->password) ],
+
         ));
+
+     
 
         return redirect()->route("admin.dashboard");
     }
