@@ -40,7 +40,7 @@ class UserSeeder extends Seeder
             'role' => 'admin',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => '111111',
+            'pin' => bcrypt('111111'),
         ]);
 
         User::create([
@@ -51,7 +51,7 @@ class UserSeeder extends Seeder
             'role' => 'admin',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => '111111',
+            'pin' => bcrypt('111111'),
         ]);
 
         User::create([
@@ -62,7 +62,7 @@ class UserSeeder extends Seeder
             'role' => 'user',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => '111111',
+            'pin' => bcrypt('111111'),
         ]);
 
         User::create([
@@ -73,7 +73,7 @@ class UserSeeder extends Seeder
             'role' => 'user',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => '111111',
+            'pin' => bcrypt('111111'),
         ]);
     }
 }

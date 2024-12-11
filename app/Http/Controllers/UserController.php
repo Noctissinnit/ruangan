@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function get(Request $request)
     {
-        return response()->json(User::where('id', $request->id)->first(['name', 'email', 'nis', 'pin', 'department_id', 'jabatan_id']));
+        return response()->json(User::where('id', $request->id)->first(['name', 'email', 'nis', 'department_id', 'jabatan_id']));
     }
 
     public function import(Request $request)
@@ -35,14 +35,13 @@ class UserController extends Controller
             "name" => "required",
             "email" => "required|email",
             "nis" => "required|numeric",
-            "pin" => "required|numeric",
             "password" => "required",
             "department_id" => 'required|numeric',
             "jabatan_id" => 'required|numeric'
         ]);
 
         User::create(array_merge(
-            $request->all('name', 'email', 'nis', 'pin', 'department_id', 'jabatan_id'),
+            $request->all("name", "email", "nis", "department_id", 'jabatan_id'),
             ['password' => Hash::make($request->password)]
         ));
 
@@ -58,13 +57,12 @@ class UserController extends Controller
             "name" => "required",
             "email" => "required|email",
             "nis" => "required|numeric",
-            "pin" => "required|numeric",
             "department_id" => 'required|numeric',
             "jabatan_id" => 'required|numeric'
         ]);
 
         User::where("id", $request->id)->update(
-            $request->all('name', 'email', 'nis', 'pin', 'department_id', 'jabatan_id')
+            $request->all("name", "email", "nis", "department_id", 'jabatan_id')
         );
 
         return redirect()->route("admin.dashboard");
