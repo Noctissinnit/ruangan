@@ -77,20 +77,14 @@ class BookingController extends Controller
             "nis" => ["required"],
             "password" => ["required"],
         ]);
-        $user = User::where("nis", $request->nis)->with('department')->first();
-        // $success = $user !== null && Hash::check($request->password, $user->password);
+        $user = User::where("nis", $request->nis)->where('pin', $request->password)->with('department')->first();
         if ($user === null) {
-            return response()->json(['success' => false, 'message' => 'NIS atau Password salah. Silakan coba lagi.']);
+            return response()->json(['success' => false, 'message' => 'NIS atau PIN salah. Silakan coba lagi.']);
         }
-        if ($user->pin === null) {
-            return response()->json(['success' => false, 'message' => 'Akun ini belum memiliki PIN. Silahkan membuat PIN terlebih dahulu.']);
-        }
-        $success = Hash::check($request->password, $user->pin);
 
         return response()->json([
-            "success" => $success,
-            "data" => $success ? $user : null,
-            'message' => $success ? null : 'NIS atau Password salah. Silakan coba lagi.'
+            "success" => true,
+            "data" => $user,
         ]);
     }
 
@@ -111,9 +105,8 @@ class BookingController extends Controller
         ]);
 
         // $user = User::find(session('google_bookings_user_id'));
-        $user = User::where('nis', $request->nis)->first();
-        $success = $user !== null && Hash::check($request->password, $user->pin);
-        if (!$success) {
+        $user = User::where('nis', $request->nis)->where('pin', $request->password)->first();
+        if ($user === null) {
             return back()->with('error', 'Failed to validate user');
         }
 

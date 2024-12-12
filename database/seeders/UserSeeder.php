@@ -22,11 +22,11 @@ class UserSeeder extends Seeder
             'name' => 'Admin Booking Web',
             'nis' => '999999',
             'email' => 'bookingweb@gmail.com',
-            'password' => bcrypt('@!bookingweb123'),
+            'password' => '@!bookingweb123',
             'role' => 'admin',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => bcrypt('123123'),
+            'pin' => '123123',
         ]);
     }
 
@@ -36,18 +36,18 @@ class UserSeeder extends Seeder
             'name' => 'Alvin Dimas',
             'nis' => '111111',
             'email' => 'alvin.dimas.praditya@gmail.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'role' => 'admin',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => bcrypt('111111'),
+            'pin' => '111111',
         ]);
 
         User::create([
             'name' => 'Anjing Sedboi',
             'nis' => '999999',
             'email' => 'anjingsedboi@gmail.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'role' => 'user',
             'department_id' => 1,
             'jabatan_id' => 1,
@@ -58,22 +58,22 @@ class UserSeeder extends Seeder
             'name' => 'Noctis Yoru',
             'nis' => '987654',
             'email' => 'ncts.yoru@gmail.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'role' => 'admin',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => bcrypt('111111'),
+            'pin' => '111111',
         ]);
 
         User::create([
             'name' => 'Bimo Satriaji',
             'nis' => '123456',
             'email' => 'bimosatriaji6@gmail.com',
-            'password' => bcrypt('password'),
+            'password' => 'password',
             'role' => 'user',
             'department_id' => 1,
             'jabatan_id' => 1,
-            'pin' => bcrypt('111111'),
+            'pin' => '111111',
         ]);
     }
 }
