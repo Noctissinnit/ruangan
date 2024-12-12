@@ -60,6 +60,11 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function isUser(): bool
+    {
+        return $this->role === 'user';
+    }
+
     public function department(): BelongsTo
     {
         return $this->belongsTo(Department::class, 'department_id');

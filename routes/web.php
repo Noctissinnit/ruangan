@@ -8,6 +8,7 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\GoogleController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ApprovalController;
+use App\Http\Controllers\AuthController;
 use App\Http\Middleware\AdminOnly;
 use App\Http\Middleware\UserLeaveDashboard;
 use Google\Service\CloudCommercePartnerProcurementService\Approval;
@@ -46,7 +47,12 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     Route::get('/rooms/list', [RoomController::class, 'list'])->name('rooms.list');
 
     // Route untuk authentication (login/register)
-    Auth::routes();
+    // Auth::routes();
+
+    Route::get('/login', [AuthController::class, 'indexLogin'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
     // Route untuk dashboard setelah login
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

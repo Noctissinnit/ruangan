@@ -16,10 +16,6 @@ use Spatie\GoogleCalendar\Event;
 use Carbon\Carbon;
 class AdminController extends Controller
 {
-    public function indexLogin()
-    {
-        return view("admin.login");
-    }
     public function dashboard(){
         $users = User::all();
         $departments = Department::all();

@@ -40,7 +40,7 @@ class UserController extends Controller
             "jabatan_id" => 'required|numeric'
         ]);
 
-        User::create(array_merge(
+        User::insert(array_merge(
             $request->all("name", "email", "nis", "department_id", 'jabatan_id'),
             ['password' => $request->password]
         ));

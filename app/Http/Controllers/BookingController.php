@@ -81,6 +81,9 @@ class BookingController extends Controller
         if ($user === null) {
             return response()->json(['success' => false, 'message' => 'NIS atau PIN salah. Silakan coba lagi.']);
         }
+        if ($user->isUser()) {
+            return response()->json(['success' => false, 'message' => 'Maaf, kamu tidak memiliki akses untuk menambahkan booking.']);
+        }
 
         return response()->json([
             "success" => true,
@@ -106,7 +109,7 @@ class BookingController extends Controller
 
         // $user = User::find(session('google_bookings_user_id'));
         $user = User::where('nis', $request->nis)->where('pin', $request->password)->first();
-        if ($user === null) {
+        if ($user === null || $user->isUser()) {
             return back()->with('error', 'Failed to validate user');
         }
 

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('nis')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->string('role')->default('user');
+            $table->enum('role', ['user', 'admin', 'manager'])->default('user');
             $table->string('google_id')->nullable();
             $table->rememberToken();
             $table->timestamps();
