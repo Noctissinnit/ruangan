@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Imports\UsersImport;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -30,24 +29,6 @@ class UserController extends Controller
         }
     }
 
-    public function storePin(Request $request)
-    {
-        $request->validate([
-            'pin' => 'required|numeric',
-            'pin_confirm' => 'required|numeric'
-        ]);
-        if ($request->pin !== $request->pin_confirm) {
-            return back()->with('error', 'Konfirmasi PIN gagal.');
-        }
-
-        if (Auth::user()->pin !== null) {
-            return back()->with('error', 'PIN sudah ditambahkan sebelumnya.');
-        }
-
-        Auth::user()->update(['pin' => bcrypt($request->pin)]);
-        return back()->with('success', 'PIN berhasil ditambahkan.');
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -64,7 +45,7 @@ class UserController extends Controller
             ['password' => Hash::make($request->password)]
         ));
 
-
+     
 
         return redirect()->route("admin.dashboard");
     }

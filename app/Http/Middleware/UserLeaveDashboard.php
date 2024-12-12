@@ -17,7 +17,7 @@ class UserLeaveDashboard
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::check() && Auth::user()->role === 'user' && !Route::is('user.dashboard') && $request->isMethod('get')) {
+        if (Auth::check() && Auth::user()->role === 'user' && !Route::is('user.dashboard')) {
             Auth::logout();
             return redirect()->route('home');
         }

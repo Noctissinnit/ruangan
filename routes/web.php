@@ -59,7 +59,6 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
         // Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
 
         Route::get('/user/dashboard', [DashboardController::class, 'indexUser'])->name('user.dashboard');
-        Route::post('/user/pin', [UserController::class, 'storePin'])->name('user.store-pin');
 
         Route::middleware(AdminOnly::class)->group(function () {
             Route::get('/admin/dashboard', [AdminController::class, 'dashboard'])->name('admin.dashboard');
