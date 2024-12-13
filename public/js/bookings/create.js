@@ -361,7 +361,7 @@ async function resetSession() {
 
 async function updateCurrentAvailable() {
     const res = await $.get(roomAvailableUrl);
-    $('#current-available-status').html(res.available ? 'Tersedia' : 'Tidak Tersedia');
+    $('#current-available-status').html(res.length > 0 ? 'Tersedia' : 'Tidak Tersedia');
 }
 
 

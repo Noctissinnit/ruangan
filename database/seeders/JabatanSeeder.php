@@ -19,6 +19,7 @@ class JabatanSeeder extends Seeder
             [ 'name' => 'Dosen' ],
             [ 'name' => 'Karyawan' ],
             [ 'name' => 'Security' ],
+            [ 'name' => 'Manager' ],
         ]);
     }
 }

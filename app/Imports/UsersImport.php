@@ -22,15 +22,17 @@ class UsersImport implements ToCollection
         foreach ($rows as $i => $row) {
             if ($i === 0) continue;
             try {
+                $department = $row[6];
+                $jabatan = $row[7];
                 User::insert([
                     'name' => $row[0],
                     'email' => $row[1],
                     'nis' => $row[2],
-                    'password' => $row[3],
                     'pin' => $row[3],
-                    'role' => $row[4],
-                    'department_id' => is_numeric($row[5]) ? $row[5] : Department::where('name', $row[5])->first()->id,
-                    'jabatan_id' => is_numeric($row[6]) ? $row[5] : Jabatan::where('name', $row[5])->first()->id,
+                    'password' => $row[4],
+                    'role' => $row[5],
+                    'department_id' => is_numeric($department) ? $department : Department::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($department)) . '%'])->first()->id,
+                    'jabatan_id' => is_numeric($jabatan) ? $jabatan : Jabatan::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($jabatan)) . '%'])->first()->id,
                 ]);
             } catch (\Exception $e) {
                 info($e->getMessage());
