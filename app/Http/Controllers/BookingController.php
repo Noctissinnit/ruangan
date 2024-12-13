@@ -64,10 +64,10 @@ class BookingController extends Controller
         return response()->json(['success' => true]);
     }
 
-    public function roomAvailable(int $roomId)
+    public function roomAvailable(Room $room)
     {
-        $available = Booking::where('room_id', $roomId)->where('date', '>', Carbon::now())
-            ->where('end_time', Carbon::now())->exists();
+        $available = $room->bookings()->where('date', Carbon::today())
+            ->where('end_time', '>', Carbon::now())->exists();
         return response()->json(['available' => !$available]);
     }
 
@@ -180,10 +180,9 @@ class BookingController extends Controller
             }
         }
 
-        return back();
-        // return redirect()
-        //     ->route("bookings.create", $request->room_id)
-        //     ->with("success", "Booking berhasil ditambahkan.");
+        return redirect()
+            ->route("home")
+            ->with("success", "Booking berhasil ditambahkan.");
     }
 
     public function destroy(Request $request)
