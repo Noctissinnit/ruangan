@@ -55,7 +55,7 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 </div>
 
 <!-- Modal untuk Histori Booking -->
-<div class="modal fade" id="bookingHistoryModal" tabindex="-1" role="dialog" aria-labelledby="bookingHistoryModalLabel" aria-hidden="true">
+<div class="modal" id="bookingHistoryModal" tabindex="-1" role="dialog" aria-labelledby="bookingHistoryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -86,7 +86,7 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 </div>
 
 <!-- Modal untuk Login -->
-<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
+<div class="modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form id="form-login" class="modal-content">
             <div class="modal-header">
@@ -110,7 +110,7 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 </div>
 
 <!-- Modal untuk menambah peminjaman -->
-<div class="modal fade" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
+<div class="modal" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form id="form-booking" class="modal-content" action="{{ route('bookings.store') }}" method="POST">
             @csrf
