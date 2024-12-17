@@ -50,9 +50,9 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     // Auth::routes();
 
     Route::get('/login', [AuthController::class, 'indexLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/login', [AuthController::class, 'login'])->name('login.store');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-    Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout.store');
 
     // Route untuk dashboard setelah login
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

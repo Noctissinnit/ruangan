@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-const isAuth = {{ Auth::check() ? 'true' : 'false' }};
+const isAdmin = {{ Auth::check() && Auth::user()->isAdmin() ? 'true' : 'false' }};
 const roomId = {{ $roomId }};
 const bookingsDate = "{{ session('google_bookings_date') }}";
 const isGoogleCallback = {{ session('google_bookings_user_id') && session('google_bookings_date')
@@ -33,20 +33,26 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 @section('content')
 <div class="container">
     <div class="row">
-        <div class="col-md-7 room-card" id="room-status">
-            <div class="row">
-                <div class="col-md-8">
-                    <div id="current-date"></div>
-                    <div id="current-time"></div>
-                </div>
-                <div class="col-md-4">
-                    <div id="current-available">Status: <span id="current-available-status"></span></div>
-                </div>
-            </div>
+        <div class="col-md-6 room-card" id="room-status">
+            <div id="current-date"></div>
+            <div id="current-time"></div>
         </div>
-        <div class="col-md-5 room-card">
-            <div id="current-bookings">
+        <div class="col-md-6 room-card">
+            <div>
                 <h4>Jam Penggunaan Hari Ini:</h4>
+                <table id="current-bookings" class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Jam Mulai</th>
+                            <th scope="col">Jam Selesai</th>
+                            <th scope="col">Deskripsi</th>
+                            @admin
+                                <th scope="col">Aksi</th>
+                            @endadmin
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
             </div>
         </div>
     </div>

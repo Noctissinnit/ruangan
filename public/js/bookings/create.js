@@ -7,7 +7,7 @@ $(document).ready(() => {
     updateBookings();
     clearForms();
     tryGoogleCallback();
-    updateCurrentAvailable();
+    // updateCurrentAvailable();
 
     $("#select-room").select2({
         dropdownParent: $("#bookingModal"),
@@ -278,19 +278,26 @@ async function updateBookings() {
 
     const bookingsData = await $.get(url.toString());
 
-    const currentBookingsDiv = $("#current-bookings");
-    currentBookingsDiv.html("<h4>Jam Penggunaan Hari Ini:</h4>");
+    const currentBookings = $("#current-bookings>tbody");
 
     if (bookingsData.length === 0) {
-        currentBookingsDiv.append("<p>Tidak ada peminjaman hari ini.</p>");
+        currentBookings.append(`<tr><td colspan="3">Tidak ada peminjaman hari ini...</td></tr>`);
     } else {
         bookingsData.forEach((booking, index) => {
-            currentBookingsDiv.append(`
-            <div>
-                <span>Dipinjam oleh ${booking.user.name} dari ${formatTime(booking.start_time)} hingga ${formatTime(booking.end_time)}</span>
-                ${isAuth ? `<a href="${destroyUrl}?id=${booking.id}"><button class="btn btn-danger btn-sm ml-2">Hapus</button></a>` : ""}
-            </div>
+            currentBookings.append(`
+            <tr>
+                <td>${formatTime(booking.start_time)}</td>
+                <td>${formatTime(booking.end_time)}</td>
+                <td>${booking.description}</td>
+                ${isAdmin ? `<td><a href="${destroyUrl}?id=${booking.id}"><button class="btn btn-danger btn-sm ml-2">Hapus</button></a></td>` : ""}
+            </tr>
             `);
+            // currentBookingsDiv.append(`
+            // <div>
+            //     <span>Dipinjam oleh ${booking.user.name} dari ${formatTime(booking.start_time)} hingga ${formatTime(booking.end_time)}</span>
+            //     ${isAuth ? `<a href="${destroyUrl}?id=${booking.id}"><button class="btn btn-danger btn-sm ml-2">Hapus</button></a>` : ""}
+            // </div>
+            // `);
         });
     }
 }
