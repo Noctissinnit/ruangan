@@ -19,7 +19,7 @@
             $(`#current-available-status-${room.id}`).html(res.available ? 'Tersedia' : 'Tidak Tersedia');
         });
     }
-    setInterval(updateCurrentAvailable, 1000);
+    {{-- setInterval(updateCurrentAvailable, 1000); --}}
 </script>
 
 @endsection

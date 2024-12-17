@@ -365,6 +365,6 @@ async function updateCurrentAvailable() {
 }
 
 
-setInterval(updateDateTime, 1000);
-setInterval(updateCurrentAvailable, 1000);
-setInterval(updateBookings, 1000);
+// setInterval(updateDateTime, 1000);
+// setInterval(updateCurrentAvailable, 1000);
+// setInterval(updateBookings, 1000);
