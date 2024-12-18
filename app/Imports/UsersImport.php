@@ -22,8 +22,8 @@ class UsersImport implements ToCollection
         foreach ($rows as $i => $row) {
             if ($i === 0) continue;
             try {
-                $department = $row[6];
-                $jabatan = $row[7];
+                $department = is_numeric($row[6]) ? $row[6] : Department::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($row[6])) . '%'])->first()->id;
+                $jabatan = empty($row[7]) ? null : (is_numeric($row[7]) ? $row[7] : Jabatan::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($row[7])) . '%'])->first()->id);
                 User::insert([
                     'name' => $row[0],
                     'email' => $row[1],
@@ -31,12 +31,9 @@ class UsersImport implements ToCollection
                     'pin' => $row[3],
                     'password' => $row[4],
                     'role' => $row[5],
-                    'department_id' => is_numeric($department) ? $department : Department::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($department)) . '%'])->first()->id,
-                    'jabatan_id' => is_numeric($jabatan) ? $jabatan : Jabatan::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($jabatan)) . '%'])->first()->id,
+                    'department_id' => $department,
+                    'jabatan_id' => $jabatan,
                 ]);
-    
-    
-
             } catch (\Exception $e) {
                 info($e->getMessage());
             }
