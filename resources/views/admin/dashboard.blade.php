@@ -82,8 +82,14 @@
     </div>
     <div class="form-group mb-3">
        
-        <small class="form-text text-muted">Masukkan kata sandi yang kuat, minimal 8 karakter.</small>
+        <small id="label-password" class="form-text text-muted">Masukkan kata sandi yang kuat, minimal 8 karakter.</small>
         <input type="password" class="form-control" id="password" placeholder="Password" name="password" required />
+    </div>
+
+    <div class="form-group mb-3">
+       
+        <small id="label-pin" class="form-text text-muted">Masukkan PIN yang kuat, 6 karakter.</small>
+        <input type="text" class="form-control" id="pin" placeholder="PIN" name="pin" maxlength="6" required />
     </div>
     <div class="form-group mb-3">
         
