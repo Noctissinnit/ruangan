@@ -51,7 +51,6 @@ class BookingController extends Controller
         }
 
         return view("bookings.create", compact("room", "roomId", "users", 'user_department', 'officeMode'));
-        
     }
 
     public function resetSession(Request $request)
@@ -136,54 +135,56 @@ class BookingController extends Controller
             Mail::to($user)->send(new InvitationMail($booking, $user));
         }
 
-        $accessToken = session('google_access_token');
-        if (config('services.google.calendar_enable') && !$accessToken) {
-            return response()->json(['error' => 'No access token found. Please authenticate.'], 401);
-        }
+        return response()->json();
+
+        // $accessToken = session('google_access_token');
+        // if (config('services.google.calendar_enable') && !$accessToken) {
+        //     return response()->json(['error' => 'No access token found. Please authenticate.'], 401);
+        // }
 
         // Remove all sessions
-        $request->session()->remove('google_access_token');
-        $request->session()->remove('google_bookings_user_id');
-        $request->session()->remove('google_bookings_date');
-        $request->session()->remove('google_bookings_room_id');
+        // $request->session()->remove('google_access_token');
+        // $request->session()->remove('google_bookings_user_id');
+        // $request->session()->remove('google_bookings_date');
+        // $request->session()->remove('google_bookings_room_id');
 
-        // Create calendar
-        if (config('services.google.calendar_enable')) {
-            $client = new GoogleClient();
-            $client->setAccessToken($accessToken);
+        // // Create calendar
+        // if (config('services.google.calendar_enable')) {
+        //     $client = new GoogleClient();
+        //     $client->setAccessToken($accessToken);
 
-            $calendarService = new GoogleCalendar($client);
-            $attendees = [];
-            $attendees[] = ['email' => $booking->user->email];
-            foreach ($booking->users as $user) {
-                $attendees[] = ['email' => $user->email];
-            }
+        //     $calendarService = new GoogleCalendar($client);
+        //     $attendees = [];
+        //     $attendees[] = ['email' => $booking->user->email];
+        //     foreach ($booking->users as $user) {
+        //         $attendees[] = ['email' => $user->email];
+        //     }
 
-            $event = new Event([
-                'summary' => 'Booking Invitation',
-                'description' => $booking->description,
-                'start' => new EventDateTime([
-                    'dateTime' => Carbon::parse($booking->date . ' ' . $booking->start_time),
-                    'timeZone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
-                ]),
-                'end' => new EventDateTime([
-                    'dateTime' => Carbon::parse($booking->date . ' ' . $booking->end_time),
-                    'timeZone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
-                ]),
-                'attendees' => $attendees,
-            ]);
+        //     $event = new Event([
+        //         'summary' => 'Booking Invitation',
+        //         'description' => $booking->description,
+        //         'start' => new EventDateTime([
+        //             'dateTime' => Carbon::parse($booking->date . ' ' . $booking->start_time),
+        //             'timeZone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
+        //         ]),
+        //         'end' => new EventDateTime([
+        //             'dateTime' => Carbon::parse($booking->date . ' ' . $booking->end_time),
+        //             'timeZone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
+        //         ]),
+        //         'attendees' => $attendees,
+        //     ]);
 
-            try {
-                $calendarService->events->insert('primary', $event);
-                return response()->json(['success' => 'Event created successfully.']);
-            } catch (\Exception $e) {
-                return response()->json(['error' => 'Failed to create event: ' . $e->getMessage()], 500);
-            }
-        }
+        //     try {
+        //         $calendarService->events->insert('primary', $event);
+        //         return response()->json(['success' => 'Event created successfully.']);
+        //     } catch (\Exception $e) {
+        //         return response()->json(['error' => 'Failed to create event: ' . $e->getMessage()], 500);
+        //     }
+        // }
 
-        return redirect()
-            ->route("home")
-            ->with("success", "Booking berhasil ditambahkan.");
+        // return redirect()
+        //     ->route("home")
+        //     ->with("success", "Booking berhasil ditambahkan.");
     }
 
     public function destroy(Request $request)

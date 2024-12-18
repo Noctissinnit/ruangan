@@ -17,12 +17,12 @@ $(document).ready(() => {
         dropdownParent: $("#bookingModal"),
         width: "resolve",
     });
-   
+
     $('#btn-history-add-booking').click(function () {
         $('#loginModal').modal('show');
         $('#bookingHistoryModal').modal('hide');
 
-       
+
     });
 
     $("#form-login").submit(checkLogin);
@@ -61,7 +61,7 @@ $(document).ready(() => {
             }
         }
         await $.post($('#form-booking').attr('action'), $('#form-booking').serialize());
-        location.reload();
+        location.href = formBookingRedirect;
     });
 
     $('button[data-bs-dismiss="modal"]').click(clearForms);
@@ -277,7 +277,7 @@ async function updateBookings() {
                 ${isAdmin ? `<td><a href="${destroyUrl}?id=${booking.id}"><button class="btn btn-danger btn-sm ml-2">Hapus</button></a></td>` : ""}
             </tr>
             `);
-           
+
         });
     }
 }

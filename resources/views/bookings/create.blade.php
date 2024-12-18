@@ -22,6 +22,7 @@ const destroyUrl = "{{ route('bookings.destroy') }}";
 const googleLoginUrl = "{{ route('google.login') }}";
 const resetSessionUrl = "{{ route('bookings.reset-session') }}";
 const roomAvailableUrl = "{{ route('bookings.room-available', $roomId) }}";
+const formBookingRedirect = "{{ route('home') }}";
 
 let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 
@@ -220,7 +221,7 @@ function updateTime() {
                 </div>
                 <div class="form-group">
                     <label for="department">Department</label>
-                    <input id="booking-user-department" class="form-control" value="{{ $user_department->name ?? '' }}" readonly />
+                    <input id="booking-user-department" class="form-control" value="{{ $user_department->name ?? '-' }}" readonly />
                 </div>
                 <div class="row form-group">
                     <div class="col">

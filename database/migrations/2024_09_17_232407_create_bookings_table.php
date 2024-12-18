@@ -20,7 +20,7 @@ return new class extends Migration
             $table->boolean('approved')->default(false);
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('room_id');
-            $table->unsignedBigInteger('department_id')->nullable(); // Membuat department_id nullable
+            $table->unsignedBigInteger('department_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('room_id')->references('id')->on('rooms')->onDelete('cascade');
             $table->foreign('department_id')->references('id')->on('departments')->onDelete('cascade');
