@@ -31,6 +31,10 @@
     <!-- SweetAlert2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+    {{-- icon Minimize --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+
     <!-- icon -->
     <link rel="icon" href="{{ asset('images/logoykbs.png') }}" type="image/png">
     {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" integrity="sha384-k6RqeWeci5ZR/Lv4MR0sA0FfDOMvKMEALPm3zYd5y7Ff13/UhgM+J7B7EXGk80fo" crossorigin="anonymous"> --}}
@@ -91,9 +95,9 @@
                             <li class="nav-item bg-success rounded">
                                 <a class="nav-link text-light" href="{{ route('login.google') }}">{{ __('Login sebagai User') }}</a>
                             </li> --}}
-                            <li class="nav-item bg-primary rounded">
+                            {{-- <li class="nav-item bg-primary rounded">
                                 <a class="nav-link text-light" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li>
+                            </li> --}}
                         @else
                         <li class="nav-item bg-primary rounded">
                                 <a id="nav-link" class="nav-link text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>

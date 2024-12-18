@@ -8,7 +8,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
-const isAuth = {{ Auth::check() ? 'true' : 'false' }};
+const isAdmin = {{ Auth::check() && Auth::user()->isAdmin() ? 'true' : 'false' }};
 const roomId = {{ $roomId }};
 const bookingsDate = "{{ session('google_bookings_date') }}";
 const isGoogleCallback = {{ session('google_bookings_user_id') && session('google_bookings_date')
@@ -24,6 +24,44 @@ const resetSessionUrl = "{{ route('bookings.reset-session') }}";
 const roomAvailableUrl = "{{ route('bookings.room-available', $roomId) }}";
 
 let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
+
+function updateTime() {
+            const now = new Date();
+            const date = now.toLocaleDateString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+            const time = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
+
+            document.getElementById('current-date').textContent = date;
+            document.getElementById('current-time').textContent = time;
+        }
+
+        // Update time every second
+        setInterval(updateTime, 1000);
+
+        // Initialize immediately
+        updateTime();
+
+        //Redirect ke Halaman Home
+        document.getElementById('form-booking').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah submit default
+        let formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '{{ route('home') }}'; // Redirect ke halaman home setelah berhasil
+            }
+        })
+        .catch(error => console.error('Error:', error));
+    });
+    
 </script>
 <script src="/js/bookings/create.js"></script>
 @endsection
@@ -31,28 +69,68 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 @section('navbar-title'){{ $room->name }}@endsection
 
 @section('content')
+<!-- Load Bootstrap CSS dan JS -->
 <div class="container">
     <div class="row">
-        <div class="col-md-7 room-card" id="room-status">
-            <div class="row">
-                <div class="col-md-8">
-                    <div id="current-date"></div>
-                    <div id="current-time"></div>
-                </div>
-                <div class="col-md-4">
-                    <div id="current-available">Status: <span id="current-available-status"></span></div>
-                </div>
-            </div>
+        <!-- Room Status -->
+        <div class="col-md-6 room-card" id="room-status">
+            <div id="current-date"></div>
+            <div id="current-time"></div>
         </div>
-        <div class="col-md-5 room-card">
-            <div id="current-bookings">
+
+        <!-- Room Bookings -->
+        <div class="col-md-6 room-card position-relative">
+            <!-- Tombol di Pojok Kanan dengan Icon -->
+            <button class="btn btn-sm btn-outline-primary position-absolute top-0 end-0 m-2" type="button" 
+                data-bs-toggle="collapse" data-bs-target="#currentBookings" aria-expanded="true" 
+                aria-controls="currentBookings">
+                <i class="bi bi-dash-square"></i> <!-- Ikon Minimize -->
+            </button>
+            <div>
                 <h4>Jam Penggunaan Hari Ini:</h4>
+                <!-- Tabel yang Bisa di-Minimize -->
+                <div class="collapse show" id="currentBookings">
+                    <table id="current-bookings" class="table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Jam Mulai</th>
+                                <th scope="col">Jam Selesai</th>
+                                <th scope="col">Deskripsi</th>
+                                @admin
+                                    <th scope="col">Aksi</th>
+                                @endadmin
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Data Dummy -->
+                            <tr>
+                                <td>08:00</td>
+                                <td>10:00</td>
+                                <td>Meeting Rutin</td>
+                                @admin
+                                    <td>Edit | Hapus</td>
+                                @endadmin
+                            </tr>
+                            <tr>
+                                <td>13:00</td>
+                                <td>15:00</td>
+                                <td>Workshop Laravel</td>
+                                @admin
+                                    <td>Edit | Hapus</td>
+                                @endadmin
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Kalender -->
     <div id="calendar" class="mt-3"></div>
 </div>
+
+
 
 <!-- Modal untuk Histori Booking -->
 <div class="modal" id="bookingHistoryModal" tabindex="-1" role="dialog" aria-labelledby="bookingHistoryModalLabel" aria-hidden="true">

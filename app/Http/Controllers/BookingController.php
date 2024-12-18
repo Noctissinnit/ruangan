@@ -51,6 +51,7 @@ class BookingController extends Controller
         }
 
         return view("bookings.create", compact("room", "roomId", "users", 'user_department', 'officeMode'));
+        
     }
 
     public function resetSession(Request $request)

@@ -7,7 +7,7 @@ $(document).ready(() => {
     updateBookings();
     clearForms();
     tryGoogleCallback();
-    updateCurrentAvailable();
+    // updateCurrentAvailable();
 
     $("#select-room").select2({
         dropdownParent: $("#bookingModal"),
@@ -17,21 +17,12 @@ $(document).ready(() => {
         dropdownParent: $("#bookingModal"),
         width: "resolve",
     });
-    // $('#btn-add-booking').click(() => {
-    //     const today = new Date();
-    //     $('#form-booking>input[name="date"]').val(today.toISOString().substring(0,10));
-    //     $("#loginModal").modal("show");
-    // });
+   
     $('#btn-history-add-booking').click(function () {
         $('#loginModal').modal('show');
         $('#bookingHistoryModal').modal('hide');
 
-        // if(tryGoogleCallback(true)) return;
-
-        // const url = new URL(googleLoginUrl);
-        // url.searchParams.set('bookings_room_id', roomId);
-        // url.searchParams.set('bookings_date', $('#form-booking>input[name="date"]').val());
-        // location.href = url.toString();
+       
     });
 
     $("#form-login").submit(checkLogin);
@@ -194,13 +185,7 @@ function getRandomColor() {
     return colors[Math.floor(Math.random() * colors.length)];
 }
 
-// Function to generate a random color
-function getRandomColor() {
-    const colors = [
-        '#FF5733', '#33FF57', '#3357FF', '#FF33A8', '#A833FF', '#FFD133', '#33FFDB'
-    ];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
+
 
 
 
@@ -268,7 +253,7 @@ function updateDateTime() {
     const formattedTime = now.toLocaleTimeString("id-ID");
 
     document.getElementById("current-date").innerText = formattedDate;
-    document.getElementById("current-time").innerText = formattedTime;
+    // document.getElementById("current-time").innerText = formattedTime;
 }
 
 async function updateBookings() {
@@ -278,19 +263,21 @@ async function updateBookings() {
 
     const bookingsData = await $.get(url.toString());
 
-    const currentBookingsDiv = $("#current-bookings");
-    currentBookingsDiv.html("<h4>Jam Penggunaan Hari Ini:</h4>");
+    const currentBookings = $("#current-bookings>tbody");
 
     if (bookingsData.length === 0) {
-        currentBookingsDiv.append("<p>Tidak ada peminjaman hari ini.</p>");
+        currentBookings.append(`<tr><td colspan="3">Tidak ada peminjaman hari ini...</td></tr>`);
     } else {
         bookingsData.forEach((booking, index) => {
-            currentBookingsDiv.append(`
-            <div>
-                <span>Dipinjam oleh ${booking.user.name} dari ${formatTime(booking.start_time)} hingga ${formatTime(booking.end_time)}</span>
-                ${isAuth ? `<a href="${destroyUrl}?id=${booking.id}"><button class="btn btn-danger btn-sm ml-2">Hapus</button></a>` : ""}
-            </div>
+            currentBookings.append(`
+            <tr>
+                <td>${formatTime(booking.start_time)}</td>
+                <td>${formatTime(booking.end_time)}</td>
+                <td>${booking.description}</td>
+                ${isAdmin ? `<td><a href="${destroyUrl}?id=${booking.id}"><button class="btn btn-danger btn-sm ml-2">Hapus</button></a></td>` : ""}
+            </tr>
             `);
+           
         });
     }
 }
@@ -359,12 +346,9 @@ async function resetSession() {
     await $.get(resetSessionUrl);
 }
 
-async function updateCurrentAvailable() {
-    const res = await $.get(roomAvailableUrl);
-    $('#current-available-status').html(res.length > 0 ? 'Tersedia' : 'Tidak Tersedia');
-}
 
 
-setInterval(updateDateTime, 1000);
-setInterval(updateCurrentAvailable, 1000);
-setInterval(updateBookings, 1000);
+
+// setInterval(updateDateTime, 1000);
+// setInterval(updateCurrentAvailable, 1000);
+// setInterval(updateBookings, 1000);
