@@ -219,10 +219,16 @@ function updateTime() {
                     <label for="date">Tanggal</label>
                     <input id="form-booking-date" class="form-control" value="{{ session('google_bookings_date') ?? '' }}" readonly />
                 </div>
+                
+                {{-- jika ingin menampilkan department --}}
                 <div class="form-group">
                     <label for="department">Department</label>
                     <input id="booking-user-department" class="form-control" value="{{ $user_department->name ?? '-' }}" readonly />
                 </div>
+
+                
+                
+                
                 <div class="row form-group">
                     <div class="col">
                         <label for="start_time">Jam Mulai</label>
