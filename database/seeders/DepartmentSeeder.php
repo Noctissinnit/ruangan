@@ -13,11 +13,21 @@ class DepartmentSeeder extends Seeder
      */
     public function run(): void
     {
-        if(app()->isProduction()) return;
+        if(app()->isProduction()) {
+            Department::insert([
+                [ 'name' => 'Finance' ],
+                [ 'name' => 'GA HK' ],
+                [ 'name' => 'HRD' ],
+                [ 'name' => 'IT' ],
+                [ 'name' => 'SUP MN' ],
+                [ 'name' => 'YKBS' ],
+            ]);
+            return;
+        }
         Department::insert([
             [ 'name' => 'IT Support' ],
             [ 'name' => 'Manager' ],
-            [ 'name' => 'Marketing' ]
+            [ 'name' => 'Marketing' ],
         ]);
     }
 }
