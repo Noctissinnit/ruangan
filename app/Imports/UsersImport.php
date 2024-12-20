@@ -22,8 +22,8 @@ class UsersImport implements ToCollection
         foreach ($rows as $i => $row) {
             if ($i === 0) continue;
             try {
-                $department = is_numeric($row[6]) ? $row[6] : Department::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($row[6])) . '%'])->first()->id;
-                $jabatan = empty($row[7]) ? null : (is_numeric($row[7]) ? $row[7] : Jabatan::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($row[7])) . '%'])->first()->id);
+                $department = empty($row[6]) ? null : (is_numeric($row[6]) ? $row[6] : Department::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($row[6])) . '%'])->first()->id);
+                $jabatan = is_numeric($row[7]) ? $row[7] : Jabatan::whereRaw('LOWER(name) LIKE ?', ['%' . trim(strtolower($row[7])) . '%'])->first()->id;
                 User::insert([
                     'name' => $row[0],
                     'email' => $row[1],

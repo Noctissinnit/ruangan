@@ -42,7 +42,7 @@
                 <td>{{ $user->nis }}</td>
                 <td>{{ $user->pin }}</td>
                 <td>{{ $user->password }}</td>
-                <td>{{ $user->department->name }}</td>
+                <td>{{ $user->department->name ?? '-' }}</td>
                 <td>{{ $user->jabatan->name ?? 'Tidak ada' }}</td>
                 <td>{{ ucfirst($user->role) }}</td>
                 <td>
