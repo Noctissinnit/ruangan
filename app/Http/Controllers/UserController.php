@@ -12,7 +12,7 @@ class UserController extends Controller
 {
     public function get(Request $request)
     {
-        return response()->json(User::where('id', $request->id)->first(['name', 'email', 'nis', 'pin', 'department_id', 'jabatan_id']));
+        return response()->json(User::where('id', $request->id)->first());
     }
 
     public function import(Request $request)
@@ -37,16 +37,12 @@ class UserController extends Controller
             "nis" => "required|numeric",
             "password" => "required",
             "pin" => "required",
+            "role" => "required",
             "department_id" => 'required|numeric',
             "jabatan_id" => 'required|numeric'
         ]);
 
-        User::insert(array_merge(
-            $request->all("name", "email", "nis", "pin", "department_id", 'jabatan_id'),
-            ['password' => $request->password]
-        ));
-
-     
+        User::insert($request->except("_token", "_method"));
 
         return redirect()->route("admin.dashboard");
     }
@@ -63,9 +59,7 @@ class UserController extends Controller
             "jabatan_id" => 'required|numeric'
         ]);
 
-        User::where("id", $request->id)->update(
-            $request->all("name", "email", "nis", "pin", "department_id", 'jabatan_id')
-        );
+        User::where("id", $request->id)->update($request->except("_token", "_method", "id", "password"));
 
         return redirect()->route("admin.dashboard");
     }

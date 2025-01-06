@@ -55,6 +55,39 @@
             @endif
         });
     </script>
+    <style>
+        .navbar-brand {
+    transition: color 0.3s ease, transform 0.3s ease; /* Animasi smooth */
+    color: #000; /* Warna default */
+    text-decoration: none;
+    }
+
+        .navbar-brand:hover {
+        color: #007bff; /* Warna saat hover (contoh: biru Bootstrap) */
+        transform: scale(1.1); /* Sedikit memperbesar */
+        text-decoration: none; /* Hilangkan garis bawah */
+    }
+
+    .btn-outline-primary {
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease; /* Animasi halus */
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff; /* Warna biru solid */
+            color: #fff; /* Ubah warna ikon dan teks menjadi putih */
+            transform: scale(1.1); /* Sedikit memperbesar tombol */
+        }
+
+        .btn-outline-primary i {
+            transition: transform 0.3s ease; /* Animasi ikon */
+        }
+
+        .btn-outline-primary:hover i {
+            transform: rotate(15deg); /* Ikon sedikit berputar saat hover */
+        }
+        
+
+    </style>
 
     @yield('head')
 </head>
@@ -63,13 +96,15 @@
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
-                <a class="navbar-brand" href="/">
-                    @if(View::hasSection('navbar-title'))
-                        @yield('navbar-title')
+                <!-- Back to Home -->
+                <a class="navbar-brand" href="{{ route('home') }}">
+                    @if(Route::currentRouteName() === 'home')
+                        Booking Room
                     @else
-                        {{ config('app.name', 'Booking Meeting Room') }}
+                        <i class="bi bi-arrow-left"></i> <!-- Bootstrap Icon -->
                     @endif
                 </a>
+                
                 @auth
                     <a class="nav-link ms-1 mt-1" href="{{ route(auth()->user()->isAdmin() ? 'admin.dashboard' : 'user.dashboard') }}">Dashboard</a>
                     @admin
@@ -87,17 +122,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="navbar-nav ms-auto">
                         @guest
-                            {{-- <!-- Link untuk Login sebagai Admin -->
-                            <li class="nav-item bg-primary rounded mx-1">
-                                <a class="nav-link text-light" href="{{ route('login') }}">{{ __('Login sebagai Admin') }}</a>
-                            </li>
-                            <!-- Link untuk Login sebagai User -->
-                            <li class="nav-item bg-success rounded">
-                                <a class="nav-link text-light" href="{{ route('login.google') }}">{{ __('Login sebagai User') }}</a>
-                            </li> --}}
-                            {{-- <li class="nav-item bg-primary rounded">
-                                <a class="nav-link text-light" href="{{ route('login') }}">{{ __('Login') }}</a>
-                            </li> --}}
+                            {{-- Login Options --}}
                         @else
                         <li class="nav-item bg-primary rounded">
                                 <a id="nav-link" class="nav-link text-light" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
@@ -106,15 +131,15 @@
 
                             </li>
                             <li class="nav-item bg-danger rounded mx-1">
-                        <a class="nav-link text-light" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                        </li>
+                                <a class="nav-link text-light" href="{{ route('logout') }}"
+                                   onclick="event.preventDefault();
+                                             document.getElementById('logout-form').submit();">
+                                    {{ __('Logout') }}
+                                </a>
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
                         @endguest
                     </ul>
                 </div>
@@ -126,4 +151,5 @@
         </main>
     </div>
 </body>
+
 </html>

@@ -4,7 +4,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', Arial, sans-serif; /* Gunakan font modern */
+    font-family: 'Poppins', Arial, sans-serif;
 }
 
 .container {
@@ -24,6 +24,7 @@ h1 {
     justify-content: center;
     flex-wrap: wrap;
     gap: 20px;
+    margin-top: 20px;
 }
 
 .card {
@@ -32,7 +33,9 @@ h1 {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.4s ease, box-shadow 0.4s ease;
     width: 250px;
-    padding: 20px;
+    padding: 30px;
+    
+ 
     overflow: hidden;
     cursor: pointer;
     text-decoration: none;
@@ -63,24 +66,111 @@ h1 {
     margin-bottom: 15px;
 }
 
+.banner {
+    background-color: #D5F0FF; /* Warna hijau sebagai contoh */
+    height: 50vh;
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.banner::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  
+    z-index: -2;
+}
+
+
+.banner-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 10px 20px;
+    margin-top: 10vh;
+    color: #ffffff;
+}
+
+.banner-icon {
+    width: 60px; /* Ukuran ikon */
+    height: 60px; /* Ukuran ikon */
+    margin-bottom: 20px; /* Jarak antara ikon dan teks */
+    object-fit: cover; /* Menjaga proporsi gambar */
+}
+
+.banner-content h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    line-height: 1.3; /* Untuk menyesuaikan teks pada layar kecil */
+}
+
+.banner-content p {
+    font-size: 1rem;
+    line-height: 1.2;
+    margin-bottom: 60px;
+    color: #333;
+}
+
+/* Media Queries for Responsiveness */
 @media (max-width: 768px) {
+    h1 {
+        font-size: 2.2rem;
+    }
+
     .card-container {
         flex-direction: column;
         align-items: center;
+        gap: 15px; /* Jarak antar kartu lebih kecil */
     }
 
     .card {
-        width: 80%;
+        width: 90%;
         max-width: 400px;
+    }
+
+    .banner-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .banner-content p {
+        font-size: 1rem;
     }
 }
 
 @media (max-width: 480px) {
     h1 {
-        font-size: 2.5rem;
+        font-size: 1.8rem;
     }
 
     .card-content h2 {
         font-size: 1.5rem;
+    }
+
+    .banner-content {
+        padding: 5px 15px;
+        margin-top: 8vh; /* Lebih kecil untuk layar kecil */
+    }
+
+    .banner-content h1 {
+        font-size: 1.5rem;
+    }
+
+    .banner-content p {
+        font-size: 0.9rem;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .card img {
+        height: 120px;
     }
 }

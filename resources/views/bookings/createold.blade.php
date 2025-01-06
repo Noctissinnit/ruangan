@@ -4,14 +4,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha512-f0tzWhCwVFS3WeYaofoLWkTP62ObhewQ1EZn65oSYDZUg1+CyywGKkWzm8BxaJj5HGKI72PnMH9jYyIFz+GH7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="/css/bookings/create.css">
 
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
 <script>
 const isAdmin = {{ Auth::check() && Auth::user()->isAdmin() ? 'true' : 'false' }};
 const roomId = {{ $roomId }};
 const bookingsDate = "{{ session('google_bookings_date') }}";
-const isGoogleCallback = {{ session('google_bookings_user_id') && session('google_bookings_date') && session('google_access_token') && session('google_bookings_room_id') === strval($roomId) ? 'true' : 'false' }};
+const isGoogleCallback = {{ session('google_bookings_user_id') && session('google_bookings_date')
+ && session('google_access_token') && session('google_bookings_room_id') === strval($roomId) ? 'true' : 'false' }};
 
 const listUrl = "{{ route('bookings.list') }}";
 const roomListUrl = "{{ route('rooms.list') }}";
@@ -26,61 +27,42 @@ const formBookingRedirect = "{{ route('home') }}";
 let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 
 function updateTime() {
-    const now = new Date();
-    const date = now.toLocaleDateString('id-ID', {
-        weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-    });
-    const time = now.toLocaleTimeString('id-ID', {
-        hour: '2-digit', minute: '2-digit', second: '2-digit'
-    });
+            const now = new Date();
+            const date = now.toLocaleDateString('id-ID', {
+                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+            });
+            const time = now.toLocaleTimeString('id-ID', {
+                hour: '2-digit', minute: '2-digit', second: '2-digit'
+            });
 
-    document.getElementById('current-date').textContent = date;
-    document.getElementById('current-time').textContent = time;
-}
-
-// Update time every second
-setInterval(updateTime, 1000);
-
-// Initialize immediately
-updateTime();
-
-// Redirect ke Halaman Home
-document.getElementById('form-booking').addEventListener('submit', function(event) {
-    event.preventDefault();
-    let formData = new FormData(this);
-
-    fetch(this.action, {
-        method: 'POST',
-        body: formData,
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            window.location.href = formBookingRedirect;
+            document.getElementById('current-date').textContent = date;
+            document.getElementById('current-time').textContent = time;
         }
-    })
-    .catch(error => console.error('Error:', error));
-});
 
-// Fungsi untuk menampilkan keyboard virtual
-function showKeyboard(targetInput) {
-    const keyboardContainer = document.getElementById('virtual-keyboard');
-    keyboardContainer.style.display = 'block';
-    const keys = keyboardContainer.querySelectorAll('.key');
-    
-    keys.forEach(key => {
-        key.addEventListener('click', () => {
-            const value = key.textContent.trim();
-            if (value === 'DEL') {
-                targetInput.value = targetInput.value.slice(0, -1);
-            } else if (value === 'SPACE') {
-                targetInput.value += ' ';
-            } else {
-                targetInput.value += value;
+        // Update time every second
+        setInterval(updateTime, 1000);
+
+        // Initialize immediately
+        updateTime();
+
+        //Redirect ke Halaman Home
+        document.getElementById('form-booking').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah submit default
+        let formData = new FormData(this);
+
+        fetch(this.action, {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.href = '{{ route('home') }}'; // Redirect ke halaman home setelah berhasil
             }
-        });
+        })
+        .catch(error => console.error('Error:', error));
     });
-}
+    
 </script>
 <script src="/js/bookings/create.js"></script>
 @endsection
@@ -102,6 +84,7 @@ function showKeyboard(targetInput) {
                         {{ config('app.name', 'Booking Meeting Room') }}
                     @endif
                 </span>
+                
             </div>
         
             <!-- Elemen Tanggal -->
@@ -134,6 +117,22 @@ function showKeyboard(targetInput) {
                         </thead>
                         <tbody>
                             <!-- Data Dummy -->
+                            <tr>
+                                {{-- <td>08:00</td>
+                                <td>10:00</td>
+                                <td>Meeting Rutin</td> --}}
+                                @admin
+                                    <td>Edit | Hapus</td>
+                                @endadmin
+                            </tr>
+                            <tr>
+                                {{-- <td>13:00</td>
+                                <td>15:00</td>
+                                <td>Workshop Laravel</td> --}}
+                                @admin
+                                    <td>Edit | Hapus</td>
+                                @endadmin
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -145,18 +144,9 @@ function showKeyboard(targetInput) {
     <div id="calendar" class="mt-3"></div>
 </div>
 
-<!-- Virtual Keyboard -->
-<div id="virtual-keyboard" style="display: none; position: fixed; bottom: 10px; width: 100%; background: #f8f9fa; padding: 10px; border-top: 1px solid #ccc;">
-    <div class="d-flex justify-content-center flex-wrap">
-        @foreach(range('A', 'Z') as $char)
-            <button class="btn btn-secondary m-1 key">{{ $char }}</button>
-        @endforeach
-        <button class="btn btn-danger m-1 key">DEL</button>
-        <button class="btn btn-success m-1 key">SPACE</button>
-    </div>
-</div>
 
-<!-- Modals tetap seperti awal -->
+
+<!-- Modal untuk Histori Booking -->
 <div class="modal" id="bookingHistoryModal" tabindex="-1" role="dialog" aria-labelledby="bookingHistoryModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -187,7 +177,7 @@ function showKeyboard(targetInput) {
     </div>
 </div>
 
-
+<!-- Modal untuk Login -->
 <div class="modal" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form id="form-login" class="modal-content">
@@ -211,6 +201,7 @@ function showKeyboard(targetInput) {
     </div>
 </div>
 
+<!-- Modal untuk menambah peminjaman -->
 <div class="modal" id="bookingModal" tabindex="-1" role="dialog" aria-labelledby="bookingModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <form id="form-booking" class="modal-content" action="{{ route('bookings.store') }}" method="POST">
@@ -283,4 +274,6 @@ function showKeyboard(targetInput) {
         </form>
     </div>
 </div>
+
+
 @endsection

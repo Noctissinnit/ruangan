@@ -6,6 +6,16 @@
 @endsection
 
 @section('content')
+
+<div class="banner">  
+</div>
+
+<div class="banner-content">
+    <h1>Selamat Datang di Booking Room</h1>
+    <p>Temukan ruang terbaik untuk kebutuhan Anda</p>
+</div>
+
+
 <div class="card-container">
     @foreach($rooms as $room)
         <a href="{{ route('bookings.create', $room->id) }}" class="card">

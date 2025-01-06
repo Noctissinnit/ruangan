@@ -60,60 +60,66 @@
         <form id="form-user" class="modal-content" method="POST" action="{{ route('user.store') }}">
             @csrf
             <input type="hidden" name="id">
-<div class="modal-header">
-    <h5 class="modal-title" id="userModalLabel">Tambah User</h5>
-    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-</div>
-<div class="modal-body">
-    <div class="form-group mb-3">
-        
-        <small class="form-text text-muted">Nama</small>
-        <input type="text" class="form-control" id="name" placeholder="Name" name="name" required />
-    </div>
-    <div class="form-group mb-3">
-        
-        <small class="form-text text-muted">Masukkan alamat email yang valid, contoh: user@example.com.</small>
-        <input type="email" class="form-control" id="email" placeholder="Email" name="email" required />
-    </div>
-    <div class="form-group mb-3">
-        
-        <small class="form-text text-muted">Masukkan NIS (Nomor Induk Siswa) pengguna.</small>
-        <input type="text" class="form-control" id="nis" placeholder="NIS" name="nis" required />
-    </div>
-   
-    <div class="form-group mb-3">
-       
-        <small id="label-password" class="form-text text-muted">Masukkan kata sandi yang kuat, minimal 8 karakter.</small>
-        <input type="password" class="form-control" id="password" placeholder="Password" name="password" required />
-    </div>
+            <div class="modal-header">
+                <h5 class="modal-title" id="userModalLabel">Tambah User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group mb-3">
+                    
+                    <small class="form-text text-muted">Nama</small>
+                    <input type="text" class="form-control" id="name" placeholder="Name" name="name" required />
+                </div>
+                <div class="form-group mb-3">
+                    
+                    <small class="form-text text-muted">Masukkan alamat email yang valid, contoh: user@example.com.</small>
+                    <input type="email" class="form-control" id="email" placeholder="Email" name="email" required />
+                </div>
+                <div class="form-group mb-3">
+                    
+                    <small class="form-text text-muted">Masukkan NIS (Nomor Induk Siswa) pengguna.</small>
+                    <input type="text" class="form-control" id="nis" placeholder="NIS" name="nis" required />
+                </div>
+                <div class="form-group mb-3">
+                
+                    <small id="label-password" class="form-text text-muted">Masukkan kata sandi yang kuat, minimal 8 karakter.</small>
+                    <input type="password" class="form-control" id="password" placeholder="Password" name="password" required />
+                </div>
 
-    <div class="form-group mb-3">
-       
-        <small id="label-pin" class="form-text text-muted">Masukkan PIN yang kuat, 6 karakter.</small>
-        <input type="text" class="form-control" id="pin" placeholder="PIN" name="pin" maxlength="6" required />
-    </div>
-    <div class="form-group mb-3">
-        
-        <small class="form-text text-muted">Pilih department tempat pengguna bekerja.</small>
-        <select class="form-control" id="department" name="department_id" required>
-            <option value="" disabled selected>Pilih Department</option>
-            @foreach ($departments as $department)
-                <option value="{{ $department->id }}">{{ $department->name }}</option>
-            @endforeach
-        </select>
-    </div>
-    <div class="form-group mb-3">
-        
-        <small class="form-text text-muted">Pilih jabatan pengguna di dalam organisasi.</small>
-        <select class="form-control" id="jabatan" name="jabatan_id" required>
-            <option value="" disabled selected>Pilih Jabatan</option>
-            @foreach ($jabatans as $jabatan)
-                <option value="{{ $jabatan->id }}">{{ $jabatan->name }}</option>
-            @endforeach
-        </select>
-    </div>
-</div>
-
+                <div class="form-group mb-3">
+                
+                    <small id="label-pin" class="form-text text-muted">Masukkan PIN yang kuat, 6 karakter.</small>
+                    <input type="text" class="form-control" id="pin" placeholder="PIN" name="pin" maxlength="6" required />
+                </div>
+                <div class="form-group mb-3">
+                    
+                    <small class="form-text text-muted">Pilih department tempat pengguna bekerja.</small>
+                    <select class="form-control" id="department" name="department_id" required>
+                        <option value="" disabled selected>Pilih Department</option>
+                        @foreach ($departments as $department)
+                            <option value="{{ $department->id }}">{{ $department->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <small class="form-text text-muted">Pilih jabatan pengguna di dalam organisasi.</small>
+                    <select class="form-control" id="jabatan" name="jabatan_id" required>
+                        <option value="" disabled selected>Pilih Jabatan</option>
+                        @foreach ($jabatans as $jabatan)
+                            <option value="{{ $jabatan->id }}">{{ $jabatan->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="form-group mb-3">
+                    <small class="form-text text-muted">Pilih role pengguna.</small>
+                    <select class="form-control" id="role" name="role" required>
+                        <option value="" disabled selected>Pilih Role</option>
+                        <option value="user">User</option>
+                        <option value="admin">Admin</option>
+                        <option value="manager">Manager</option>
+                    </select>
+                </div>
+            </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
                 <button type="submit" class="btn btn-primary">Submit</button>

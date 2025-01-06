@@ -29,6 +29,7 @@ $(document).ready(() => {
 
         form.find(`select[name="department_id"] option[value=${data.department_id}]`).attr('selected', '');
         form.find(`select[name="jabatan_id"] option[value=${data.jabatan_id}]`).attr('selected', '');
+        form.find(`select[name="role"] option[value=${data.role}]`).attr('selected', '');
 
         form.attr('action', userUpdateUrl);
 
