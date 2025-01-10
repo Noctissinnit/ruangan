@@ -39,8 +39,8 @@ $(document).ready(() => {
             'members': 'Peserta',
         })) return;
 
-        if (isTimeLess(formData.get("end_time"), formData.get("start_time"))) {
-            alert("Jam Selesai tidak bisa kurang dari Jam Mulai.");
+        if (isTimeLessOrEqual(formData.get("end_time"), formData.get("start_time"))) {
+            alert("Jam Selesai tidak bisa kurang atau sama dengan dari Jam Mulai.");
             return;
         }
 
@@ -216,7 +216,7 @@ function isTimeRangeOverlap(start1, end1, start2, end2) {
     const endTime2 = formatTime(end2);
 
     // Check if the two time ranges overlap
-    return startTime1 < endTime2 && startTime2 < endTime1;
+    return startTime1 <= endTime2 && startTime2 <= endTime1;
 }
 
 function isAtLeastOneDayLess(date1, date2) {
@@ -225,7 +225,7 @@ function isAtLeastOneDayLess(date1, date2) {
     return differenceInTime > oneDayInMilliseconds;
 }
 
-function isTimeLess(time1, time2) {
+function isTimeLessOrEqual(time1, time2) {
     // Parse the times as hours and minutes (assuming "HH:mm" format)
     const [hours1, minutes1] = time1.split(':').map(Number);
     const [hours2, minutes2] = time2.split(':').map(Number);
@@ -238,7 +238,7 @@ function isTimeLess(time1, time2) {
     date2.setHours(hours2, minutes2);
 
     // Compare the two times
-    return date1 < date2;
+    return date1 <= date2;
 }
 
 function updateDateTime() {
