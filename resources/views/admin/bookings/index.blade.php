@@ -59,7 +59,7 @@
             <th scope="col">Nama Kegiatan</th>
             <th scope="col">Peserta</th>
             {{-- <th scope="col">Status</th> --}}
-            {{-- <th scope="col">Aksi</th> --}}
+            <th scope="col">Aksi</th>
         </tr>
     </thead>
     <tbody>
@@ -80,6 +80,14 @@
                         @if(!$loop->last), @endif
                     @endforeach
                 </td>
+                <td>
+                    {{-- Check if $booking->date and $booking->start_time are less than the current date and time --}}
+                    @if(!Carbon\Carbon::parse($booking->date . ' ' . $booking->start_time)->isPast())
+                        <a href="{{ route('bookings.destroy', ['id' => $booking->id]) }}">
+                            <button class="btn btn-danger">Hapus</button>
+                        </a>
+                    @endif
+                </td>                
                 {{-- <td>
                     @if ($booking->approved)
                         <span class="badge bg-success">Approved</span>
