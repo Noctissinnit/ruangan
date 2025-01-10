@@ -253,7 +253,7 @@ function updateDateTime() {
     const formattedTime = now.toLocaleTimeString("id-ID");
 
     document.getElementById("current-date").innerText = formattedDate;
-    // document.getElementById("current-time").innerText = formattedTime;
+    document.getElementById("current-time").innerText = formattedTime;
 }
 
 async function updateBookings() {
@@ -346,9 +346,6 @@ async function resetSession() {
     await $.get(resetSessionUrl);
 }
 
-
-
-
-// setInterval(updateDateTime, 1000);
+setInterval(updateDateTime, 1000);
 // setInterval(updateCurrentAvailable, 1000);
 // setInterval(updateBookings, 1000);

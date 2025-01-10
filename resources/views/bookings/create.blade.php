@@ -25,44 +25,6 @@ const roomAvailableUrl = "{{ route('bookings.room-available', $roomId) }}";
 const formBookingRedirect = "{{ route('home') }}";
 
 let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
-
-function updateTime() {
-            const now = new Date();
-            const date = now.toLocaleDateString('id-ID', {
-                weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
-            });
-            const time = now.toLocaleTimeString('id-ID', {
-                hour: '2-digit', minute: '2-digit', second: '2-digit'
-            });
-
-            document.getElementById('current-date').textContent = date;
-            document.getElementById('current-time').textContent = time;
-        }
-
-        // Update time every second
-        setInterval(updateTime, 1000);
-
-        // Initialize immediately
-        updateTime();
-
-        //Redirect ke Halaman Home
-        document.getElementById('form-booking').addEventListener('submit', function(event) {
-        event.preventDefault(); // Mencegah submit default
-        let formData = new FormData(this);
-
-        fetch(this.action, {
-            method: 'POST',
-            body: formData,
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                window.location.href = '{{ route('home') }}'; // Redirect ke halaman home setelah berhasil
-            }
-        })
-        .catch(error => console.error('Error:', error));
-    });
-    
 </script>
 <script src="/js/bookings/create.js"></script>
 @endsection
