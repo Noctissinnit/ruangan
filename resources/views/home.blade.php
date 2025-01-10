@@ -21,9 +21,10 @@
         <a href="{{ route('bookings.create', $room->id) }}" class="card">
             <img src="data:image/jpeg;base64,{{ $room->image }}" alt="{{ $room->name }}">
             <div class="card-content">
-                <h2>{{ $room->name }}</h2>
+                <h5>{{ $room->name }}</h5>
                 <p>{{ $room->description }}</p>
             </div>
+            
         </a>
     @endforeach
 </div>
