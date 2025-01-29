@@ -90,14 +90,38 @@ $(document).ready(function () {
                     </thead>
                     <tbody>
                         <!-- Data Dummy -->
-                        <tr>
-                            
-                            @admin
+                        @foreach ($room->bookings as $booking)
+                            <tr>
+                                <td>{{ $loop->index + 1 }}</td>
+                                <td>{{ $booking->date }} ({{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }})</td>
+                                <td>{{ $booking->description }}</td> 
                                 <td>
-                                    <button class="btn btn-danger">Hapus</button>
+                                    {{-- Check if $booking->date and $booking->start_time are less than the current date and time --}}
+                                    @if(!Carbon\Carbon::parse($booking->date . ' ' . $booking->start_time)->isPast())
+                                        <a href="{{ route('bookings.destroy', ['id' => $booking->id]) }}">
+                                            <button class="btn btn-danger">Hapus</button>
+                                        </a>
+                                    @endif
+                                </td>                
+                                {{-- <td>
+                                    @if ($booking->approved)
+                                        <span class="badge bg-success">Approved</span>
+                                    @else
+                                        <span class="badge bg-warning text-dark">Pending</span>
+                                    @endif
                                 </td>
-                            @endadmin
-                        </tr>
+                                <td>
+                                    @if (!$booking->approved)
+                                        <form action="{{ route('admin.bookings.approve', $booking->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary btn-sm">Approve</button>
+                                        </form>
+                                    @else
+                                        <button class="btn btn-secondary btn-sm" disabled>Already Approved</button>
+                                    @endif
+                                </td> --}}
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
