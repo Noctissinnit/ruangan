@@ -13,11 +13,57 @@ class HomeController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function index()
+    public function homeYayasan()
     {
-        $rooms = Room::with(["bookings" => function($query){
-            $query->where('bookings.date', Carbon::today());
-        }])->get();
-        return view('home', compact('rooms'));
+        $rooms = Room::where('type', 'home')
+            ->with(["bookings" => function ($query) {
+                $query->whereDate('bookings.date', \Carbon\Carbon::today());
+            }])
+            ->get();
+
+        return view('home_yayasan', compact('rooms'));
+    }
+
+
+    public function homeMikael()
+    {
+        $rooms = Room::where('type', 'alternate')
+            ->with(["bookings" => function ($query) {
+                $query->whereDate('bookings.date', \Carbon\Carbon::today());
+            }])
+            ->get();
+
+        return view('home_mikael', compact('rooms'));
+    }
+
+
+    public function homeAll()
+    {
+        $roomTypes = ['home', 'alternate'];
+        $rooms = Room::whereIn('type', $roomTypes)
+            ->orWhere(function ($query) use ($roomTypes) {
+                foreach ($roomTypes as $type) {
+                    $query->orWhere('type', 'like', "%$type%");
+                }
+            })
+            ->with(['bookings' => function ($query) {
+                $query->whereDate('bookings.date', Carbon::today());
+            }])
+            ->get();
+
+        $homeRooms = $rooms->filter(fn($room) => str_contains($room->type, 'home'));
+        $alternateRooms = $rooms->filter(fn($room) => str_contains($room->type, 'alternate'));
+
+        return view('home_all', compact('rooms', 'homeRooms', 'alternateRooms'));
+    }
+
+    private function getRoomsByType($type)
+    {
+        return Room::where('type', $type)
+            ->orWhere('type', 'like', "%$type%")
+            ->with(["bookings" => function ($query) {
+                $query->whereDate('bookings.date', Carbon::today());
+            }])
+            ->get();
     }
 }

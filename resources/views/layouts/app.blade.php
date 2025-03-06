@@ -97,13 +97,25 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <!-- Back to Home -->
-                <a class="navbar-brand" href="{{ route('home') }}">
-                    @if(Route::currentRouteName() === 'home')
-                        Booking Room
-                    @else
-                        <i class="bi bi-arrow-left"></i> <!-- Bootstrap Icon -->
-                    @endif
-                </a>
+                <a class="navbar-brand" href="
+                @if(Route::currentRouteName() === 'home.yayasan')
+                    {{ route('home.yayasan') }}
+                @elseif(Route::currentRouteName() === 'home.mikael')
+                    {{ route('home.mikael') }}
+                @elseif(Route::currentRouteName() === 'home')
+                    {{ route('home') }}
+                @else
+                    {{ route('home') }} <!-- Default kembali ke home.all -->
+                @endif
+            ">
+                @if(in_array(Route::currentRouteName(), ['home.yayasan', 'home.mikael', 'home.']))
+                    Booking Room
+                @else
+                    <i class="bi bi-arrow-left"></i> <!-- Bootstrap Icon -->
+                @endif
+            </a>
+
+
                 
                 @auth
                     <a class="nav-link ms-1 mt-1" href="{{ route(auth()->user()->isAdmin() ? 'admin.dashboard' : 'user.dashboard') }}">Dashboard</a>

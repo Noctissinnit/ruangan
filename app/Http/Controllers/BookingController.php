@@ -93,99 +93,53 @@ class BookingController extends Controller
 
     // Menyimpan booking baru
     public function store(Request $request)
-    {
-        $request->validate([
-            'nis' => 'required',
-            'password' => 'required|numeric',
-            "room_id" => "required",
-            "date" => "required|date",
-            "start_time" => "required",
-            "end_time" => "required",
-            "description" => "required",
-            "department_id" => "required|numeric",
-            "users" => "nullable",
-            "date" => "nullable",
-        ]);
+{
+    $request->validate([
+        'nis' => 'required',
+        'password' => 'required|numeric',
+        "room_id" => "required",
+        "date" => "required|date",
+        "start_time" => "required",
+        "end_time" => "required",
+        "description" => "required",
+        "department_id" => "required|numeric",
+        "users" => "nullable",
+        "date" => "nullable",
+    ]);
 
-        // $user = User::find(session('google_bookings_user_id'));
-        $user = User::where('nis', $request->nis)->where('pin', $request->password)->first();
-        if ($user === null || $user->isUser()) {
-            return back()->with('error', 'Failed to validate user');
-        }
-
-        $booking = Booking::create(array_merge($request->all('room_id', 'date', 'start_time', 'end_time', 'description', 'department_id'), [
-            "user_id" => $user->id,
-            // 'approved' => false, // Menunggu approval
-            "approved" => true, // Otomatis approve
-        ]));
-        if ($request->users) {
-            $users = $request->users;
-
-            $syncData = [];
-            foreach ($users as $userId) {
-                $syncData[$userId] = [
-                    'unique_id' => Str::random(20),
-                ];
-            }
-            $booking->users()->sync($syncData);
-        }
-        $users = Booking::where('id', $booking->id)->first()->users;
-
-        foreach ($users as $user) {
-            Mail::to($user)->send(new InvitationMail($booking, $user));
-        }
-
-        return response()->json();
-
-        // $accessToken = session('google_access_token');
-        // if (config('services.google.calendar_enable') && !$accessToken) {
-        //     return response()->json(['error' => 'No access token found. Please authenticate.'], 401);
-        // }
-
-        // Remove all sessions
-        // $request->session()->remove('google_access_token');
-        // $request->session()->remove('google_bookings_user_id');
-        // $request->session()->remove('google_bookings_date');
-        // $request->session()->remove('google_bookings_room_id');
-
-        // // Create calendar
-        // if (config('services.google.calendar_enable')) {
-        //     $client = new GoogleClient();
-        //     $client->setAccessToken($accessToken);
-
-        //     $calendarService = new GoogleCalendar($client);
-        //     $attendees = [];
-        //     $attendees[] = ['email' => $booking->user->email];
-        //     foreach ($booking->users as $user) {
-        //         $attendees[] = ['email' => $user->email];
-        //     }
-
-        //     $event = new Event([
-        //         'summary' => 'Booking Invitation',
-        //         'description' => $booking->description,
-        //         'start' => new EventDateTime([
-        //             'dateTime' => Carbon::parse($booking->date . ' ' . $booking->start_time),
-        //             'timeZone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
-        //         ]),
-        //         'end' => new EventDateTime([
-        //             'dateTime' => Carbon::parse($booking->date . ' ' . $booking->end_time),
-        //             'timeZone' => env('APP_TIMEZONE', 'Asia/Jakarta'),
-        //         ]),
-        //         'attendees' => $attendees,
-        //     ]);
-
-        //     try {
-        //         $calendarService->events->insert('primary', $event);
-        //         return response()->json(['success' => 'Event created successfully.']);
-        //     } catch (\Exception $e) {
-        //         return response()->json(['error' => 'Failed to create event: ' . $e->getMessage()], 500);
-        //     }
-        // }
-
-        // return redirect()
-        //     ->route("home")
-        //     ->with("success", "Booking berhasil ditambahkan.");
+    
+    // $user = User::find(session('google_bookings_user_id'));
+    $user = User::where('nis', $request->nis)->where('pin', $request->password)->first();
+    if ($user === null || $user->isUser()) {
+        return back()->with('error', 'Failed to validate user');
     }
+
+    $booking = Booking::create(array_merge($request->all('room_id', 'date', 'start_time', 'end_time', 'description', 'department_id'), [
+        "user_id" => $user->id,
+        // 'approved' => false, // Menunggu approval
+        "approved" => true, // Otomatis approve
+    ]));
+    if ($request->users) {
+        $users = $request->users;
+
+        $syncData = [];
+        foreach ($users as $userId) {
+            $syncData[$userId] = [
+                'unique_id' => Str::random(20),
+            ];
+        }
+        $booking->users()->sync($syncData);
+    }
+    $users = Booking::where('id', $booking->id)->first()->users;
+
+    foreach ($users as $user) {
+        Mail::to($user)->send(new InvitationMail($booking, $user));
+    }
+
+    return response()->json();
+}
+
+
 
     public function destroy(Request $request)
     {

@@ -25,30 +25,33 @@ class RoomController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validasi input
-        $request->validate([
-            'name' => 'required',
-            'image' => 'required|image',  // Pastikan file yang di-upload adalah gambar
-            'description' => 'required'
-        ]);
+{
+    // Validasi input
+    $request->validate([
+        'name' => 'required',
+        'image' => 'required|image',  // Pastikan file yang di-upload adalah gambar
+        'description' => 'required',
+        'type' => 'required|in:home,alternate' // Validasi tipe ruangan
+    ]);
 
-        // Ambil file gambar yang di-upload
-        $image = $request->image;
+    // Ambil file gambar yang di-upload
+    $image = $request->image;
 
-        // Mengonversi gambar ke format Base64 (tanpa informasi MIME type)
-        $imageData = base64_encode(file_get_contents($image));  // Encode gambar ke Base64
+    // Mengonversi gambar ke format Base64 (tanpa informasi MIME type)
+    $imageData = base64_encode(file_get_contents($image));  // Encode gambar ke Base64
 
-        // Menyimpan data room ke database dengan Base64 string gambar
-        Room::create([
-            'name' => $request->name,  // Menyimpan 'name' dari request
-            'description' => $request->description,  // Menyimpan 'description' dari request
-            'image' => $imageData  // Menyimpan Base64 gambar (tanpa informasi MIME)
-        ]);
+    // Menyimpan data room ke database dengan Base64 string gambar
+    Room::create([
+        'name' => $request->name,  // Menyimpan 'name' dari request
+        'description' => $request->description,  // Menyimpan 'description' dari request
+        'image' => $imageData,  // Menyimpan Base64 gambar (tanpa informasi MIME)
+        'type' => $request->type // Menyimpan tipe ruangan
+    ]);
 
-        // Redirect dengan pesan sukses
-        return redirect()->route('rooms.index')->with('success', 'Room created successfully.');
-    }
+    // Redirect dengan pesan sukses
+    return redirect()->route('rooms.index')->with('success', 'Room created successfully.');
+}
+
 
     public function edit(Room $room)
     {
@@ -79,7 +82,7 @@ class RoomController extends Controller
 
         // Redirect ke halaman index dengan pesan sukses
         return redirect()->route('rooms.index')->with('success', 'Room updated successfully.');
-    }
+        }   
 
     // Hapus room (Admin only)
     public function destroy(Room $room)

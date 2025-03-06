@@ -28,7 +28,10 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     })->name('terms-of-services');
 
     // Route untuk halaman utama 
-    Route::get('/', [HomeController::class, 'index'])->name('home');
+    Route::get('/yayasan', [HomeController::class, 'homeYayasan'])->name('home.yayasan');
+    Route::get('/mikael', [HomeController::class, 'homeMikael'])->name('home.mikael');
+    Route::get('/', [HomeController::class, 'homeAll'])->name('home');
+
 
     // Route untuk Approval
     Route::get('/approval/{id}', [ApprovalController::class, 'index'])->name('approval.index');
