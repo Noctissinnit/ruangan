@@ -16,6 +16,7 @@ $(document).ready(() => {
     $("#select-users").select2({
         dropdownParent: $("#bookingModal"),
         width: "resolve",
+        multiple: true,
     });
 
     $('#btn-history-add-booking').click(function () {
@@ -85,7 +86,10 @@ $(document).ready(() => {
             }
         }
 
-        await $.post($('#form-booking').attr('action'), Object.fromEntries(formData));
+        let objectData = Object.fromEntries(formData);
+        objectData['users[]'] = $('#select-users').select2('val');
+
+        await $.post($('#form-booking').attr('action'), objectData);
 
         let endTimeWithOneMinuteAdded = new Date(`1970-01-01T${originalEndTime}`);
         endTimeWithOneMinuteAdded.setMinutes(endTimeWithOneMinuteAdded.getMinutes() + 1);

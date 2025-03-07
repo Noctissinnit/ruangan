@@ -213,7 +213,7 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
                 </div>
                 <div class="form-group">
                     <label for="users[]">Peserta</label>
-                    <select name="users[]" id="select-users" multiple class="form-control" style="width: 100%">
+                    <select name="users[]" id="select-users" multiple="" class="form-control" style="width: 100%">
                         @foreach($users as $user)
                             <option value="{{ $user->id }}">{{ $user->name }}</option>
                         @endforeach
