@@ -93,9 +93,7 @@ $(document).ready(() => {
 
         $('input[name="end_time"]').val(formattedEndTimeWithAddedMinute);
 
-
-        redirectAfterBooking();
-
+        location.href = formBookingRedirect;
     });
 
     $('button[data-bs-dismiss="modal"]').click(clearForms);
