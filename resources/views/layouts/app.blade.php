@@ -98,7 +98,7 @@
             <div class="container">
                 <!-- Back to Home -->
                 <a class="navbar-brand" href="
-                @if(Route::is('home') || (isset($room) && $room->type === 'all'))
+                @if(Route::is('home') || (isset($room) && $room->type === 'home'))
                     {{ route('home') }}
                 @elseif(Route::is('home.mikael') || (isset($room) && $room->type === 'mikael'))
                     {{ route('home.mikael') }}
@@ -106,7 +106,7 @@
                     {{ route('home.yayasan') }}
                 @endif
             ">
-                @if(in_array(Route::currentRouteName(), ['home.yayasan', 'home.mikael', 'home.']))
+                @if(in_array(Route::currentRouteName(), ['home.yayasan', 'home.mikael', 'home']))
                     Booking Room
                 @else
                     <i class="bi bi-arrow-left"></i> <!-- Bootstrap Icon -->
