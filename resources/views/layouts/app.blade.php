@@ -98,14 +98,12 @@
             <div class="container">
                 <!-- Back to Home -->
                 <a class="navbar-brand" href="
-                @if(Route::currentRouteName() === 'home.yayasan')
-                    {{ route('home.yayasan') }}
-                @elseif(Route::currentRouteName() === 'home.mikael')
-                    {{ route('home.mikael') }}
-                @elseif(Route::currentRouteName() === 'home')
+                @if(Route::is('home') || (isset($room) && $room->type === 'all'))
                     {{ route('home') }}
+                @elseif(Route::is('home.mikael') || (isset($room) && $room->type === 'mikael'))
+                    {{ route('home.mikael') }}
                 @else
-                    {{ route('home') }} <!-- Default kembali ke home.all -->
+                    {{ route('home.yayasan') }}
                 @endif
             ">
                 @if(in_array(Route::currentRouteName(), ['home.yayasan', 'home.mikael', 'home.']))

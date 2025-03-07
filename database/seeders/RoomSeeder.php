@@ -15,6 +15,6 @@ class RoomSeeder extends Seeder
     {
         if (app()->isProduction()) return;
         Room::create(['name' => 'Ruang Meeting Yayasan', 'description' => 'Ruang Meeting Yayasan Bagian Luar']);
-        Room::create(['name' => 'Ruang Meeting Yayasan', 'description' => 'Ruang Meeting Yayasan Bagian Dalam']);
+        Room::create(['name' => 'Ruang Meeting Yayasan', 'description' => 'Ruang Meeting Yayasan Bagian Dalam', 'type' => 'alternate']);
     }
 }
