@@ -22,11 +22,11 @@ const destroyUrl = "{{ route('bookings.destroy') }}";
 const googleLoginUrl = "{{ route('google.login') }}";
 const resetSessionUrl = "{{ route('bookings.reset-session') }}";
 const roomAvailableUrl = "{{ route('bookings.room-available', $roomId) }}";
-const roomType = "{{ $room->type }}";
-const formBookingRedirect = 
-    (roomType === "alternate") ? "{{ route('home.mikael') }}" :
-    (roomType === "all") ? "{{ route('home') }}" :
-    "{{ route('home.yayasan') }}";
+// const roomType = "{{ $room->type }}";
+// const formBookingRedirect = 
+//     (roomType === "alternate") ? "{{ route('home.mikael') }}" :
+//     (roomType === "all") ? "{{ route('home') }}" :
+//     "{{ route('home.yayasan') }}";
 
 let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
 </script>

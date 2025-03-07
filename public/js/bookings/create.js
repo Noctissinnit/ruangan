@@ -29,10 +29,10 @@ $(document).ready(() => {
     $('#btn-booking-form-close').click(resetSession);
     $('#form-booking').submit(async e => {
         e.preventDefault();
-        if (isBookingPost) return location.reload();
-    
+        if (isBookingPost) return location.href = formBookingRedirect;
+
         const formData = new FormData(e.currentTarget);
-    
+
         if (!validateEmptyForm(formData, {
             'start_time': 'Jam',
             'end_time': 'Jam',
@@ -44,34 +44,34 @@ $(document).ready(() => {
             alert("Jam Selesai tidak bisa kurang atau sama dengan dari Jam Mulai.");
             return;
         }
-    
+
         let originalEndTime = formData.get("end_time");
         let endTimeInput = formData.get("end_time");
         let endTime = new Date(`1970-01-01T${endTimeInput}`);
         endTime.setMinutes(endTime.getMinutes() - 1);
         let formattedEndTime = endTime.toTimeString().slice(0, 5);
         formData.set("end_time", formattedEndTime);
-    
+
         $('#loading').css('display', 'flex');
         isBookingPost = true;
-    
+
         // Ambil data room dan cek availability
         const rooms = await $.get(roomListUrl);
         let selectedRoom = rooms.find(dat => dat.id === roomId);
-    
+
         if (!selectedRoom) {
             alert("Ruangan tidak ditemukan.");
             return;
         }
-    
+
         let bookings = selectedRoom.bookings;
-    
+
         if (bookings.length > 0) {
             const bookingsToday = bookings.filter(dat => isDateEqual(
                 new Date($('#form-booking>input[name="date"]').val()),
                 new Date(dat.date)
             ));
-    
+
             if (bookingsToday.some(dat => isTimeRangeOverlap(
                 formData.get("start_time"),
                 formData.get("end_time"),
@@ -84,20 +84,20 @@ $(document).ready(() => {
                 return;
             }
         }
-    
+
         await $.post($('#form-booking').attr('action'), Object.fromEntries(formData));
-    
+
         let endTimeWithOneMinuteAdded = new Date(`1970-01-01T${originalEndTime}`);
         endTimeWithOneMinuteAdded.setMinutes(endTimeWithOneMinuteAdded.getMinutes() + 1);
         let formattedEndTimeWithAddedMinute = endTimeWithOneMinuteAdded.toTimeString().slice(0, 5);
-    
+
         $('input[name="end_time"]').val(formattedEndTimeWithAddedMinute);
-    
-       
+
+
         redirectAfterBooking();
-        
+
     });
-    
+
     $('button[data-bs-dismiss="modal"]').click(clearForms);
 
     $(document).on('keydown', function (e) {

@@ -93,51 +93,51 @@ class BookingController extends Controller
 
     // Menyimpan booking baru
     public function store(Request $request)
-{
-    $request->validate([
-        'nis' => 'required',
-        'password' => 'required|numeric',
-        "room_id" => "required",
-        "date" => "required|date",
-        "start_time" => "required",
-        "end_time" => "required",
-        "description" => "required",
-        "department_id" => "required|numeric",
-        "users" => "nullable",
-        "date" => "nullable",
-    ]);
+    {
+        $request->validate([
+            'nis' => 'required',
+            'password' => 'required|numeric',
+            "room_id" => "required",
+            "date" => "required|date",
+            "start_time" => "required",
+            "end_time" => "required",
+            "description" => "required",
+            "department_id" => "required|numeric",
+            "users" => "nullable",
+            "date" => "nullable",
+        ]);
 
-    
-    // $user = User::find(session('google_bookings_user_id'));
-    $user = User::where('nis', $request->nis)->where('pin', $request->password)->first();
-    if ($user === null || $user->isUser()) {
-        return back()->with('error', 'Failed to validate user');
-    }
 
-    $booking = Booking::create(array_merge($request->all('room_id', 'date', 'start_time', 'end_time', 'description', 'department_id'), [
-        "user_id" => $user->id,
-        // 'approved' => false, // Menunggu approval
-        "approved" => true, // Otomatis approve
-    ]));
-    if ($request->users) {
-        $users = $request->users;
-
-        $syncData = [];
-        foreach ($users as $userId) {
-            $syncData[$userId] = [
-                'unique_id' => Str::random(20),
-            ];
+        // $user = User::find(session('google_bookings_user_id'));
+        $user = User::where('nis', $request->nis)->where('pin', $request->password)->first();
+        if ($user === null || $user->isUser()) {
+            return back()->with('error', 'Failed to validate user');
         }
-        $booking->users()->sync($syncData);
-    }
-    $users = Booking::where('id', $booking->id)->first()->users;
 
-    foreach ($users as $user) {
-        Mail::to($user)->send(new InvitationMail($booking, $user));
-    }
+        $booking = Booking::create(array_merge($request->all('room_id', 'date', 'start_time', 'end_time', 'description', 'department_id'), [
+            "user_id" => $user->id,
+            // 'approved' => false, // Menunggu approval
+            "approved" => true, // Otomatis approve
+        ]));
+        if ($request->users) {
+            $users = $request->users;
 
-    return response()->json();
-}
+            $syncData = [];
+            foreach ($users as $userId) {
+                $syncData[$userId] = [
+                    'unique_id' => Str::random(20),
+                ];
+            }
+            $booking->users()->sync($syncData);
+        }
+        $users = Booking::where('id', $booking->id)->first()->users;
+
+        foreach ($users as $user) {
+            Mail::to($user)->send(new InvitationMail($booking, $user));
+        }
+
+        return response()->json();
+    }
 
 
 
