@@ -131,6 +131,7 @@ class BookingController extends Controller
             $booking->users()->sync($syncData);
         }
         $users = Booking::where('id', $booking->id)->first()->users;
+        
 
         foreach ($users as $user) {
             Mail::to($user)->send(new InvitationMail($booking, $user));

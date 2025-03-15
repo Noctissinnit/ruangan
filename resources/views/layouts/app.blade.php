@@ -98,7 +98,9 @@
             <div class="container">
                 <!-- Back to Home -->
                 <a class="navbar-brand" href="
-                @if(Route::is('yayasan') || (isset($room) && $room->type === 'home'))
+                @if(Route::is('home'))
+                    {{ route('home') }}
+                @elseif(Route::is('yayasan') || (isset($room) && $room->type === 'home'))
                     {{ route('home.yayasan') }}
                 @elseif(Route::is('home.mikael') || (isset($room) && $room->type === 'alternate'))
                     {{ route('home.mikael') }}
@@ -112,7 +114,7 @@
                     <i class="bi bi-arrow-left"></i> <!-- Bootstrap Icon -->
                 @endif
             </a>
-
+            
 
                 
                 @auth
