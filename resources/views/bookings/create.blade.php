@@ -3,7 +3,13 @@
 @section('head')
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.min.css" integrity="sha512-f0tzWhCwVFS3WeYaofoLWkTP62ObhewQ1EZn65oSYDZUg1+CyywGKkWzm8BxaJj5HGKI72PnMH9jYyIFz+GH7g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <link rel="stylesheet" href="/css/bookings/create.css">
+ <!-- Flatpickr CSS -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <!-- Select2 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js" integrity="sha512-AIOTidJAcHBH2G/oZv9viEGXRqDNmfdPVPYOYKGy3fti0xIplnlgMHUGfuNRzC6FkzIo0iIxgFnr9RikFxK+sw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
@@ -23,12 +29,49 @@ const googleLoginUrl = "{{ route('google.login') }}";
 const resetSessionUrl = "{{ route('bookings.reset-session') }}";
 const roomAvailableUrl = "{{ route('bookings.room-available', $roomId) }}";
 const roomType = "{{ $room->type }}";
-const formBookingRedirect = 
-    (roomType === "home") ? "{{ route('home') }}" :
-    (roomType === "alternate") ? "{{ route('home.mikael') }}" :
-    "{{ route('home.yayasan') }}";
+// const formBookingRedirect = 
+//     (roomType === "home") ? "{{ route('home') }}" :
+//     (roomType === "alternate") ? "{{ route('home.mikael') }}" :
+//     "{{ route('home.yayasan') }}";
 
 let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
+ $(document).ready(function() {
+    // Init Select2
+    $('#nama').select2({
+      placeholder: "Pilih nama peserta",
+      allowClear: true
+    });
+
+    
+
+
+    // Init Flatpickr
+    flatpickr("#tanggal", {
+      mode: "multiple",
+      dateFormat: "Y-m-d"
+    });
+
+    // Form Submit Preview
+    $('#eventForm').on('submit', function(e) {
+      e.preventDefault();
+
+      const namaPeserta = $('#nama').val();
+      const kegiatan = $('#namaKegiatan').val();
+      const tanggal = $('#tanggal').val().split(','); // array of dates
+      const jamMulai = $('#jamMulai').val();
+      const jamSelesai = $('#jamSelesai').val();
+
+      let previewText = `Nama kegiatan: ${kegiatan}\n`;
+      previewText += `Peserta: ${namaPeserta.join(', ')}\n`;
+      previewText += `Jadwal:\n`;
+      tanggal.forEach(tgl => {
+        previewText += `- ${tgl.trim()} (${jamMulai} - ${jamSelesai})\n`;
+      });
+
+      $('#previewContent').text(previewText);
+      $('#preview').show();
+    });
+  });
 </script>
 <script src="/js/bookings/create.js"></script>
 @endsection
@@ -52,6 +95,7 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
                         {{ config('app.name', 'Booking Meeting Room') }}
                     @endif
                     </strong>
+
                 </span>
                </h4> 
                 
@@ -60,6 +104,17 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
             <!-- Elemen Tanggal -->
             <div id="current-date"></div>
             <div id="current-time"></div>
+            @admin
+            <button type="button" 
+                    class="btn btn-primary btn-sm" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#bookingMultiModal"
+                    data-room-id="{{ $room->id }}">
+                Booking Banyak
+            </button>
+
+            @endadmin
+
         </div>
 
         <!-- Room Bookings -->
@@ -234,5 +289,65 @@ let isOfficeMode = {{ $officeMode ? 'true' : 'false' }};
     </div>
 </div>
 
+<div class="modal fade" id="bookingMultiModal" tabindex="-1" role="dialog" aria-labelledby="bookingMultiModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form id="form-booking-multi" class="modal-content" action="{{ route('booking.storeMultiple') }}" method="POST">
+            @csrf
+
+            <!-- Hidden Inputs -->
+            <input type="hidden" name="user_name" value="{{ auth()->user()->name ?? '' }}">
+            <input type="hidden" name="email" value="{{ auth()->user()->email ?? '' }}">
+            <input type="hidden" name="room_id" value="{{ $roomId ?? '' }}">
+            <input type="hidden" name="department_id" value="{{ $user_department->id ?? '' }}">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h5 class="modal-title">Tambah Peminjaman Banyak Tanggal</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                
+                
+                <div class="form-group">
+                    <label for="multi-dates">Pilih Tanggal</label>
+                    <input type="text" class="form-control" id="multi-dates" name="dates" placeholder="Pilih beberapa tanggal" readonly required>
+                </div>
+
+                <div class="row form-group">
+                    <div class="col">
+                        <label for="start_time">Jam Mulai</label>
+                        <input class="timepicker form-control" name="start_time" placeholder="Jam Mulai" required />
+                    </div>
+                    <div class="col">
+                        <label for="end_time">Jam Selesai</label>
+                        <input class="timepicker form-control" name="end_time" placeholder="Jam Selesai" required />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="users[]">Peserta</label>
+                    <select name="users[]" id="select-users-banyak" multiple class="form-control" style="width: 100%">
+                        @foreach($users as $user)
+                            <option value="{{ $user->id }}">{{ $user->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Deskripsi</label>
+                    <textarea class="form-control" name="description" rows="3" required></textarea>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                <button type="submit" class="btn btn-primary">Tambah Peminjaman</button>
+            </div>
+        </form>
+    </div>
+</div>
 
 @endsection

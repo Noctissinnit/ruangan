@@ -30,6 +30,7 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     // Route untuk halaman utama 
     Route::get('/yayasan', [HomeController::class, 'homeYayasan'])->name('home.yayasan');
     Route::get('/mikael', [HomeController::class, 'homeMikael'])->name('home.mikael');
+    Route::get('/faber', [HomeController::class, 'homeFaber'])->name('home.faber');
     Route::get('/', [HomeController::class, 'homeAll'])->name('home');
 
 
@@ -46,6 +47,8 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     Route::post('/bookings/store', [BookingController::class, 'store'])->name('bookings.store');
     Route::get('/bookings/reset-session', [BookingController::class, 'resetSession'])->name('bookings.reset-session');
     Route::get('/bookings/available/{room}', [BookingController::class, 'roomAvailable'])->name('bookings.room-available');
+    Route::post('/booking/multiple/store', [BookingController::class, 'storeMultipleBookings'])->name('booking.multiple.store');
+
 
     Route::get('/rooms/list', [RoomController::class, 'list'])->name('rooms.list');
 
@@ -56,6 +59,9 @@ Route::middleware(UserLeaveDashboard::class)->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->name('login.store');
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout.store');
+    Route::post('/bookings/store-multiple', [BookingController::class, 'storeMultiple'])->name('booking.storeMultiple');
+
+
 
     // Route untuk dashboard setelah login
     // Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

@@ -36,6 +36,16 @@ class HomeController extends Controller
         return view('home_mikael', compact('rooms'));
     }
 
+    public function homeFaber()
+    {
+        $rooms = Room::where('type', 'faber')
+            ->with(["bookings" => function ($query) {
+                $query->whereDate('bookings.date', \Carbon\Carbon::today());
+            }])
+            ->get();
+
+        return view('home_faber', compact('rooms'));
+    }
 
     public function homeAll()
     {

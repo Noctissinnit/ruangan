@@ -69,7 +69,7 @@ $(document).ready(function () {
 
 <div class="card-container">
     @foreach($rooms as $room)
-    <a href="{{ route('bookings.create', ['room_id' => $room->id]) }}" class="card">
+    <a href="{{ route('bookings.create', $room->id) }}" class="card">
             <img src="data:image/jpeg;base64,{{ $room->image }}" alt="{{ $room->name }}">
             <div class="card-content">
                 <h5>{{ $room->name }}</h5>

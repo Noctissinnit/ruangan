@@ -31,7 +31,7 @@ class RoomController extends Controller
         'name' => 'required',
         'image' => 'required|image',  // Pastikan file yang di-upload adalah gambar
         'description' => 'required',
-        'type' => 'required|in:home,alternate' // Validasi tipe ruangan
+        'type' => 'required|in:home,alternate,faber' // Validasi tipe ruangan
     ]);
 
     // Ambil file gambar yang di-upload

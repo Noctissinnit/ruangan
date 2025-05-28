@@ -104,6 +104,8 @@
                     {{ route('home.yayasan') }}
                 @elseif(Route::is('home.mikael') || (isset($room) && $room->type === 'alternate'))
                     {{ route('home.mikael') }}
+                @elseif(Route::is('home.faber') || (isset($room) && $room->type === 'faber'))
+                    {{ route('home.faber') }}                 
                 @else
                     {{ route('home') }}
                 @endif

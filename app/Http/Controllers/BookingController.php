@@ -20,6 +20,7 @@ use Google\Service\Calendar\EventDateTime;
 use Illuminate\Support\Facades\Mail;
 use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class BookingController extends Controller
@@ -98,7 +99,6 @@ class BookingController extends Controller
             'nis' => 'required',
             'password' => 'required|numeric',
             "room_id" => "required",
-            "date" => "required|date",
             "start_time" => "required",
             "end_time" => "required",
             "description" => "required",
@@ -107,8 +107,6 @@ class BookingController extends Controller
             "date" => "nullable",
         ]);
 
-
-        // $user = User::find(session('google_bookings_user_id'));
         $user = User::where('nis', $request->nis)->where('pin', $request->password)->first();
         if ($user === null || $user->isUser()) {
             return back()->with('error', 'Failed to validate user');
@@ -116,9 +114,9 @@ class BookingController extends Controller
 
         $booking = Booking::create(array_merge($request->all('room_id', 'date', 'start_time', 'end_time', 'description', 'department_id'), [
             "user_id" => $user->id,
-            // 'approved' => false, // Menunggu approval
             "approved" => true, // Otomatis approve
         ]));
+
         if ($request->users) {
             $users = $request->users;
 
@@ -130,17 +128,77 @@ class BookingController extends Controller
             }
             $booking->users()->sync($syncData);
         }
+
         $users = Booking::where('id', $booking->id)->first()->users;
-        
 
         foreach ($users as $user) {
             Mail::to($user)->send(new InvitationMail($booking, $user));
         }
 
-        return response()->json();
+        // Redirect to the appropriate home page based on room type
+        $room = Room::find($request->room_id);
+        if ($room) {
+            switch ($room->type) {
+                case 'faber':
+                    return redirect()->route('home.faber')->with('success', 'Booking berhasil dibuat.');
+                case 'yayasan':
+                    return redirect()->route('home.yayasan')->with('success', 'Booking berhasil dibuat.');
+                case 'alternate':
+                    return redirect()->route('home.mikael')->with('success', 'Booking berhasil dibuat.');
+                default:
+                    return redirect()->route('home')->with('success', 'Booking berhasil dibuat.');
+            }
+        }
+
+        return redirect()->route('home')->with('success', 'Booking berhasil dibuat.');
     }
 
+  public function storeMultiple(Request $request)
+{
+    info($request->all());
 
+    $request->validate([     
+        'dates' => 'required|string',
+        'room_id' => 'required',
+        'start_time' => 'required',
+        'end_time' => 'required',
+        'description' => 'required|string',     
+        'users' => 'nullable|array',
+    ]);
+
+    $dates = explode(", ", $request->dates);
+    $room = Room::find($request->room_id);
+
+    foreach ($dates as $date) {
+        $booking = Booking::create([
+            'room_id'      => $request->room_id,
+            'date'         => $date,
+            'start_time'   => $request->start_time,
+            'end_time'     => $request->end_time,
+            'description'  => $request->description,     
+            'approved'     => true,
+        ]);
+
+        if ($request->users) {
+            $syncData = [];
+            foreach ($request->users as $userId) {
+                $syncData[$userId] = ['unique_id' => Str::random(20)];
+            }
+            $booking->users()->sync($syncData);
+
+            foreach ($booking->users as $participant) {
+                Mail::to($participant)->send(new InvitationMail($booking, $participant));
+            }
+        }
+    }
+
+    return redirect()->route(match ($room->type) {
+        'faber' => 'home.faber',
+        'yayasan' => 'home.yayasan',
+        'alternate' => 'home.mikael',
+        default => 'home',
+    })->with('success', 'Booking berhasil dibuat untuk beberapa tanggal.');
+}
 
     public function destroy(Request $request)
     {

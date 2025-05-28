@@ -69,7 +69,9 @@
         @foreach ($bookings as $booking)
             <tr>
                 <td>{{ $loop->index + 1 }}</td>
-                <td>{{ $booking->date }} ({{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }})</td>
+                <td>{{ $booking->date }} ({{ substr($booking->start_time, 0, 5) }} - 
+                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $booking->end_time)->addMinute()->format('H:i') }})</td>
+
                 <td>{{ $booking->description }}</td> 
                 <td>
                     @foreach($booking->users as $user)

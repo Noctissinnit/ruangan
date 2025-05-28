@@ -7,7 +7,6 @@ $(document).ready(() => {
     updateBookings();
     clearForms();
     tryGoogleCallback();
-    // updateCurrentAvailable();
 
     $("#select-room").select2({
         dropdownParent: $("#bookingModal"),
@@ -19,98 +18,73 @@ $(document).ready(() => {
         multiple: true,
     });
 
+    $('#select-users-banyak').select2({
+        dropdownParent: $('#bookingMultiModal'), // penting agar dropdown muncul di modal
+        width: '100%',
+        placeholder: 'Pilih peserta',
+    });
+    $(document).ready(function () {
+            flatpickr("#multi-dates", {
+            mode: "multiple",
+            dateFormat: "Y-m-d",
+        });
+   
+    const bookingMultiModal = document.getElementById('bookingMultiModal');
+    bookingMultiModal.addEventListener('show.bs.modal', function (event) {
+        const button = event.relatedTarget;
+        const roomId = button.getAttribute('data-room-id');
+        const input = bookingMultiModal.querySelector('#multi-room-id');
+        if (roomId && input) {
+            input.value = roomId;
+        }
+    });
+
+
     $('#btn-history-add-booking').click(function () {
         $('#loginModal').modal('show');
         $('#bookingHistoryModal').modal('hide');
-
-
     });
 
     $("#form-login").submit(checkLogin);
     $('#btn-booking-form-close').click(resetSession);
-    $('#form-booking').submit(async e => {
+    $('#form-booking').submit(e => {
+    if (isBookingPost) return;
+
+    const formData = new FormData(e.currentTarget);
+
+    // Validasi manual
+    if (!validateEmptyForm(formData, {
+        'start_time': 'Jam',
+        'end_time': 'Jam',
+        'description': 'Deskripsi',
+        'members': 'Peserta',
+    })) {
         e.preventDefault();
-        if (isBookingPost) return location.href = formBookingRedirect;
-    
-        const formData = new FormData(e.currentTarget);
-    
-        if (!validateEmptyForm(formData, {
-            'start_time': 'Jam',
-            'end_time': 'Jam',
-            'description': 'Deskripsi',
-            'members': 'Peserta',
-        })) return;
-    
-        if (isTimeLessOrEqual(formData.get("end_time"), formData.get("start_time"))) {
-            alert("Jam Selesai tidak bisa kurang atau sama dengan dari Jam Mulai.");
-            return;
-        }
-    
-        // Simpan waktu asli sebelum manipulasi
-        let originalEndTime = formData.get("end_time");
-    
-        // Kurangi 1 menit sebelum disimpan ke database
-        let endTime = new Date(`1970-01-01T${originalEndTime}`);
-        endTime.setMinutes(endTime.getMinutes() - 1);
-        let formattedEndTime = endTime.toTimeString().slice(0, 5);
-        formData.set("end_time", formattedEndTime);
-    
-        $('#loading').css('display', 'flex');
-        isBookingPost = true;
-    
-        // Ambil data room dan cek availability
-        const rooms = await $.get(roomListUrl);
-        let selectedRoom = rooms.find(dat => dat.id === roomId);
-    
-        if (!selectedRoom) {
-            alert("Ruangan tidak ditemukan.");
-            return;
-        }
-    
-        let bookings = selectedRoom.bookings;
-    
-        if (bookings.length > 0) {
-            const bookingsToday = bookings.filter(dat => isDateEqual(
-                new Date($('#form-booking>input[name="date"]').val()),
-                new Date(dat.date)
-            ));
-    
-            if (bookingsToday.some(dat => isTimeRangeOverlap(
-                formData.get("start_time"),
-                formData.get("end_time"),
-                formatTime(dat.start_time),
-                formatTime(dat.end_time)
-            ))) {
-                alert("Jam peminjaman sudah digunakan oleh user lain.");
-                isBookingPost = false;
-                $('#loading').css('display', 'none');
-                return;
-            }
-        }
-    
-        let objectData = Object.fromEntries(formData);
-        objectData['users[]'] = $('#select-users').select2('val');
-    
-        await $.post($('#form-booking').attr('action'), objectData);
-    
-        // Kembalikan end_time +1 menit sebelum ditampilkan lagi di form
-        let endTimeWithOneMinuteAdded = new Date(`1970-01-01T${originalEndTime}`);
-        endTimeWithOneMinuteAdded.setMinutes(endTimeWithOneMinuteAdded.getMinutes() + 1);
-        let formattedEndTimeWithAddedMinute = endTimeWithOneMinuteAdded.toTimeString().slice(0, 5);
-    
-        $('input[name="end_time"]').val(formattedEndTimeWithAddedMinute);
-    
-        location.href = formBookingRedirect;
-    });
-    
-    // Saat menampilkan event di kalender, tambahkan kembali 1 menit
-    function adjustEndTimeForCalendar(event) {
-        let endTime = new Date(`1970-01-01T${event.end_time}`);
-        endTime.setMinutes(endTime.getMinutes() + 1);
-        return endTime.toTimeString().slice(0, 5);
+        return;
     }
+
+    if (isTimeLessOrEqual(formData.get("end_time"), formData.get("start_time"))) {
+        alert("Jam Selesai tidak bisa kurang atau sama dengan dari Jam Mulai.");
+        e.preventDefault();
+        return;
+    }
+
+    // Kurangi 1 menit dari end_time
+    let endTime = new Date(`1970-01-01T${formData.get("end_time")}`);
+    endTime.setMinutes(endTime.getMinutes() - 1);
+    let formattedEndTime = endTime.toTimeString().slice(0, 5);
+    $('input[name="end_time"]').val(formattedEndTime);
+
+    $('#loading').css('display', 'flex');
+    isBookingPost = true;
+    // Biarkan form lanjut submit secara normal
+    });
+});
+//     $('#bookingMultiModal').on('shown.bs.modal', function () {
     
-    
+// });
+
+
 
     $('button[data-bs-dismiss="modal"]').click(clearForms);
 
@@ -146,7 +120,7 @@ async function showBookingHistory(date, dateStr) {
                 <tr>
                     <td>${data.department.name}</td>
                     <td>${formatTime(data.start_time)}</td>
-                    <td>${formatTime(data.end_time)}</td>
+                    <td>${formattedEndTimeWithAddedMinute}</td>
                     <td>${data.description}</td>
                 </tr>
             `)
@@ -212,7 +186,7 @@ function generateCalendar() {
                             description: booking.description,
                             start_time: startTime,
                             end_time: endTime, // Tampilkan end_time yang sudah ditambah 1 menit
-                            user_name: booking.user.name,
+                            user_name: booking.user ? booking.user.name : '' ,
                         }
                     };
                 });
@@ -245,10 +219,6 @@ function getRandomColor() {
     ];
     return colors[Math.floor(Math.random() * colors.length)];
 }
-
-
-
-
 
 function isToday(dateString) {
     // Create a Date object from the input string
@@ -349,7 +319,6 @@ async function updateBookings() {
         });
     }
 }
-
 
 function formatTime(time) {
     let parts = time.split(":");

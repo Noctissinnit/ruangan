@@ -34,7 +34,7 @@ class UserController extends Controller
         $request->validate([
             "name" => "required",
             "email" => "required|email",
-            "nis" => "required|numeric",
+            "nis" => "required|string|max:20",
             "password" => "required",
             "pin" => "required",
             "role" => "required",
@@ -53,7 +53,7 @@ class UserController extends Controller
             "id" => "required|numeric",
             "name" => "required",
             "email" => "required|email",
-            "nis" => "required|numeric",
+            "nis" => "required|string|max:20",
             "pin" => "required|numeric",
             "department_id" => 'required|numeric',
             "jabatan_id" => 'required|numeric'

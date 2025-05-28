@@ -2,7 +2,7 @@
 
 @section('head')
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
-<script src="{{ asset('js/app.js') }}"></script>
+
 <link rel="stylesheet" href="/css/home.css">
 <script src="/js/bookings/create.js"></script>
 <script>async function updateBookingsByRoom(roomId) {
@@ -57,7 +57,6 @@ $(document).ready(function () {
 
 @section('content')
 
-
 <div class="banner">  
 </div>
 
@@ -69,7 +68,7 @@ $(document).ready(function () {
 
 <div class="card-container">
     @foreach($rooms as $room)
-    <a href="{{ route('bookings.create', ['room_id' => $room->id]) }}" class="card">
+    <a href="{{ route('bookings.create', $room->id) }}" class="card">
             <img src="data:image/jpeg;base64,{{ $room->image }}" alt="{{ $room->name }}">
             <div class="card-content">
                 <h5>{{ $room->name }}</h5>
@@ -81,12 +80,21 @@ $(document).ready(function () {
                 <table id="current-bookings" class="table">
                     <thead>
                         <tr>
+<<<<<<< HEAD
                             <th scope="col">No</th>
                             <th scope="col">Jam Peminjaman</th>
                             <th scope="col">Deskripsi</th>
                             {{-- @admin
                                 <th scope="col">Aksi</th>
                             @endadmin --}}
+=======
+                            <th scope="col">Jam Mulai</th>
+                            <th scope="col">Jam Selesai</th>
+                            <th scope="col">Deskripsi</th>
+                            @admin
+                                <th scope="col">Aksi</th>
+                            @endadmin
+>>>>>>> 68c542265b2ea7c9304d2db3eff6e826da40a690
                         </tr>
                     </thead>
                     <tbody>
@@ -94,6 +102,7 @@ $(document).ready(function () {
                         @foreach ($room->bookings as $booking)
                             <tr>
                                 <td>{{ $loop->index + 1 }}</td>
+<<<<<<< HEAD
                                 <td>
                                     {{ $booking->date }} 
                                     (
@@ -109,6 +118,17 @@ $(document).ready(function () {
                                             <button class="btn btn-danger">Hapus</button>
                                         </a>
                                     @endif --}}
+=======
+                                <td>{{ $booking->date }} ({{ substr($booking->start_time, 0, 5) }} - {{ substr($booking->end_time, 0, 5) }})</td>
+                                <td>{{ $booking->description }}</td> 
+                                <td>
+                                    {{-- Check if $booking->date and $booking->start_time are less than the current date and time --}}
+                                    @if(!Carbon\Carbon::parse($booking->date . ' ' . $booking->start_time)->isPast())
+                                        <a href="{{ route('bookings.destroy', ['id' => $booking->id]) }}">
+                                            <button class="btn btn-danger">Hapus</button>
+                                        </a>
+                                    @endif
+>>>>>>> 68c542265b2ea7c9304d2db3eff6e826da40a690
                                 </td>                
                                 {{-- <td>
                                     @if ($booking->approved)

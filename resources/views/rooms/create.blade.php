@@ -50,6 +50,7 @@
                                 <option value="" disabled selected>Pilih Tipe Ruangan</option>
                                 <option value="home" {{ old('type') == 'home' ? 'selected' : '' }}>Yayasan</option>
                                 <option value="alternate" {{ old('type') == 'alternate' ? 'selected' : '' }}>Mikael</option>
+                                <option value="faber" {{ old('type') == 'faber' ? 'selected' : '' }}>Faber</option>
                             </select>
                         </div>
 

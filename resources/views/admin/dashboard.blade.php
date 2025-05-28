@@ -6,6 +6,35 @@
     const userGetUrl = "{{ route('user.get') }}";
     const userStoreUrl = "{{ route('user.store') }}";
     const userUpdateUrl = "{{ route('user.update') }}";
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const table = document.getElementById('usersTable');
+        const tbody = table.getElementsByTagName('tbody')[0];
+        const rows = tbody.getElementsByTagName('tr');
+        
+        searchInput.addEventListener('keyup', function() {
+            const searchTerm = this.value.toLowerCase();
+
+            Array.from(rows).forEach(function(row) {
+                const cells = row.getElementsByTagName('td');
+                let rowMatches = false;
+
+                for (let i = 0; i < cells.length - 1; i++) {
+                    const cellText = cells[i].textContent.toLowerCase();
+                    if (cellText.includes(searchTerm)) {
+                        rowMatches = true;
+                        break;
+                    }
+                }
+
+                row.style.display = rowMatches ? '' : 'none';
+            });
+        });
+    });
+    
+
+  
 </script>
 <script src="/js/admin/dashboard.js"></script>
 @endsection
@@ -18,7 +47,15 @@
         <input type="file" name="excel" accept=".xls,.xlsx" style="display: none">
         <button id="form-user-btn-import" class="btn btn-success" type="button">Import Users</button>
     </form>
-    <table class="table table-bordered mt-3">
+
+    <!-- Add search input -->
+    <div class="row mt-3 mb-3">
+        <div class="col-md-4">
+            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+        </div>
+    </div>
+
+    <table class="table table-bordered mt-3" id="usersTable">
         <thead>
             <tr>
                 <th>No.</th>
@@ -47,7 +84,9 @@
                 <td>{{ ucfirst($user->role) }}</td>
                 <td>
                     <button class="btn btn-warning btn-edit-user" id="{{ $user->id }}">Edit</button>
-                    <a href="{{ route('user.destroy', $user->id) }}"><button class="btn btn-danger">Hapus</button></a>
+                    <a href="{{ route('user.destroy', $user->id) }}" onclick="return confirm('Yakin ingin menghapus user ini?')">
+                        <button type="button" class="btn btn-danger">Hapus</button>
+                    </a>
                 </td>
             </tr>
             @endforeach
