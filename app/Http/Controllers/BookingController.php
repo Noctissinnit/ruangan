@@ -22,6 +22,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Jobs\ProcessBookingInvitationMail;
 
 class BookingController extends Controller
 {
@@ -132,7 +133,7 @@ class BookingController extends Controller
         $users = Booking::where('id', $booking->id)->first()->users;
 
         foreach ($users as $user) {
-            Mail::to($user)->send(new InvitationMail($booking, $user));
+            ProcessBookingInvitationMail::dispatch($booking, $user);
         }
 
         // Redirect to the appropriate home page based on room type
@@ -187,7 +188,7 @@ class BookingController extends Controller
             $booking->users()->sync($syncData);
 
             foreach ($booking->users as $participant) {
-                Mail::to($participant)->send(new InvitationMail($booking, $participant));
+                ProcessBookingInvitationMail::dispatch($booking, $participant);
             }
         }
     }
