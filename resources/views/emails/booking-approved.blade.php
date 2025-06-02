@@ -11,7 +11,9 @@
     <ul>
         <li>Name: {{ $booking->nama }}</li>
         <li>Email: {{ $booking->user->email }}</li>
-        <li>Department: {{ $booking->department }}</li>
+        @if($booking->department)
+            <li>Department: {{ $booking->department }}</li>
+        @endif
         <li>Date: {{ $booking->date }}</li>
         <li>Start Time: {{ $booking->start_time }}</li>
         <li>End Time: {{ $booking->end_time }}</li>

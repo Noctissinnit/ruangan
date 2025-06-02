@@ -178,6 +178,7 @@ class BookingController extends Controller
             'end_time'     => $request->end_time,
             'description'  => $request->description,     
             'approved'     => true,
+            'user_id'      => auth()->user()->id,
         ]);
 
         if ($request->users) {

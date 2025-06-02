@@ -40,7 +40,7 @@ class InvitationMail extends Mailable
             ->endsAt(Carbon::parse($booking->date . ' ' . $booking->end_time))
             ->address($booking->room->name)
             ->description($booking->description)
-            ->organizer($booking->user->email ?? env('GOOGLE_CALENDAR_MAIL_ORGANIZER'));
+            ->organizer($booking->user->email);
 
         foreach ($booking->users as $user) {
             $event = $event->attendee($user->email, $user->name, ParticipationStatus::needs_action());
