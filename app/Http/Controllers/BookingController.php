@@ -113,6 +113,19 @@ class BookingController extends Controller
             return back()->with('error', 'Failed to validate user');
         }
 
+        $overlap = Booking::where('room_id', $request->room_id)
+            ->where('date', $request->date)
+            ->where(function ($query) use ($request) {
+                $query->where('start_time', '<', $request->end_time)
+                    ->where('end_time', '>', $request->start_time);
+            })
+            ->exists();
+
+        if ($overlap) {
+            return back()->with('error', 'Waktu booking bentrok dengan jadwal lain.')->withInput();
+        }
+
+
         $booking = Booking::create(array_merge($request->all('room_id', 'date', 'start_time', 'end_time', 'description', 'department_id'), [
             "user_id" => $user->id,
             "approved" => true, // Otomatis approve
@@ -136,7 +149,6 @@ class BookingController extends Controller
             ProcessBookingInvitationMail::dispatch($booking, $user);
         }
 
-        // Redirect to the appropriate home page based on room type
         $room = Room::find($request->room_id);
         if ($room) {
             switch ($room->type) {
@@ -155,52 +167,69 @@ class BookingController extends Controller
     }
 
   public function storeMultiple(Request $request)
-{
-    info($request->all());
+    {
+        info($request->all());
 
-    $request->validate([     
-        'dates' => 'required|string',
-        'room_id' => 'required',
-        'start_time' => 'required',
-        'end_time' => 'required',
-        'description' => 'required|string',     
-        'users' => 'nullable|array',
-    ]);
-
-    $dates = explode(", ", $request->dates);
-    $room = Room::find($request->room_id);
-
-    foreach ($dates as $date) {
-        $booking = Booking::create([
-            'room_id'      => $request->room_id,
-            'date'         => $date,
-            'start_time'   => $request->start_time,
-            'end_time'     => $request->end_time,
-            'description'  => $request->description,     
-            'approved'     => true,
-            'user_id'      => auth()->user()->id,
+        $request->validate([
+            'dates' => 'required|string',
+            'room_id' => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
+            'description' => 'required|string',
+            'users' => 'nullable|array',
         ]);
 
-        if ($request->users) {
-            $syncData = [];
-            foreach ($request->users as $userId) {
-                $syncData[$userId] = ['unique_id' => Str::random(20)];
-            }
-            $booking->users()->sync($syncData);
+        $dates = explode(", ", $request->dates);
+        $room = Room::find($request->room_id);
 
-            foreach ($booking->users as $participant) {
-                ProcessBookingInvitationMail::dispatch($booking, $participant);
+        
+        $adjustedEndTime = Carbon::parse($request->end_time)->subMinute()->format('H:i');
+
+        foreach ($dates as $date) {
+          
+            $overlap = Booking::where('room_id', $request->room_id)
+                ->where('date', $date)
+                ->where(function ($query) use ($request) {
+                    $query->where('start_time', '<', $request->end_time)
+                        ->where('end_time', '>', $request->start_time);
+                })
+                ->exists();
+
+            if ($overlap) {
+                return back()->with('error', "Waktu booking bentrok pada tanggal $date.")->withInput();
+            }
+
+
+            $booking = Booking::create([
+                'room_id'     => $request->room_id,
+                'date'        => $date,
+                'start_time'  => $request->start_time,
+                'end_time'    => $adjustedEndTime,
+                'description' => $request->description,
+                'approved'    => true,
+                'user_id'     => auth()->user()->id,
+            ]);
+
+            if ($request->users) {
+                $syncData = [];
+                foreach ($request->users as $userId) {
+                    $syncData[$userId] = ['unique_id' => Str::random(20)];
+                }
+                $booking->users()->sync($syncData);
+
+                foreach ($booking->users as $participant) {
+                    ProcessBookingInvitationMail::dispatch($booking, $participant);
+                }
             }
         }
-    }
 
-    return redirect()->route(match ($room->type) {
-        'faber' => 'home.faber',
-        'yayasan' => 'home.yayasan',
-        'alternate' => 'home.mikael',
-        default => 'home',
-    })->with('success', 'Booking berhasil dibuat untuk beberapa tanggal.');
-}
+        return redirect()->route(match ($room->type) {
+            'faber' => 'home.faber',
+            'yayasan' => 'home.yayasan',
+            'alternate' => 'home.mikael',
+            default => 'home',
+        })->with('success', 'Booking berhasil dibuat untuk beberapa tanggal.');
+    }
 
     public function destroy(Request $request)
     {

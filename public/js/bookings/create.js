@@ -118,7 +118,7 @@ async function showBookingHistory(date, dateStr) {
             
             tableBody.append(`
                 <tr>
-                    <td>${data.department.name}</td>
+                    <td>${data.department ? data.department.name : ""}</td>
                     <td>${formatTime(data.start_time)}</td>
                     <td>${formattedEndTimeWithAddedMinute}</td>
                     <td>${data.description}</td>
